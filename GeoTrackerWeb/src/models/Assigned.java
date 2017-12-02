@@ -4,13 +4,7 @@ public class Assigned {
 	private int id;
 	private int idProject;
 	private int idUser;
-	
-	public Assigned(int id, int idProject, int idUser) {
-		this.id = id;
-		this.idProject = idProject;
-		this.idUser = idUser;
-	}
-	
+		
 	public int getId() {
 		return id;
 	}

@@ -6,14 +6,6 @@ public class ExtraField {
 	private String type;
 	private String value;
 	
-	
-	public ExtraField(int id, int idRegister, String type, String value) {
-		this.id = id;
-		this.idRegister = idRegister;
-		this.type = type;
-		this.value = value;
-	}
-	
 	public int getId() {
 		return id;
 	}

@@ -6,10 +6,13 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 public class Database {
-	public static Connection connection;
-	
+	public static Connection connection;	
 	
 	public static void connect() {
+		
+		System.setProperty("java.naming.factory.initial", "org.jnp.interfaces.NamingContextFactory");
+		System.setProperty("java.naming.provider.url", "localhost:1099");
+		
 		if(connection == null){
 			String status = "ok";
 			try{
@@ -34,7 +37,6 @@ public class Database {
 	public static void disconnect() throws SQLException{
 		connection.close();
 		connection = null;
-	}
-	
+	}	
 	
 }

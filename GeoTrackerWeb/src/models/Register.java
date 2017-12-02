@@ -9,18 +9,6 @@ public class Register {
 	private double latitude;
 	private double longitude;
 	
-	public Register(int id, String description, String date, int idUser, int idProject, double latitude,
-			double longitude) {
-		super();
-		this.id = id;
-		this.description = description;
-		this.date = date;
-		this.idUser = idUser;
-		this.idProject = idProject;
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
-	
 	public int getId() {
 		return id;
 	}

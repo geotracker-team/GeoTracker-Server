@@ -5,12 +5,6 @@ public class Project {
 	private String name;
 	private int idCompany;
 	
-	public Project(int id, String name, int idCompany) {
-		this.id = id;
-		this.name = name;
-		this.idCompany = idCompany;
-	}
-	
 	public int getId() {
 		return id;
 	}
