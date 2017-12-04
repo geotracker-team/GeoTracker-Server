@@ -1,0 +1,204 @@
+body {
+	font: 12px verdana, helvetica, arial, tahoma, sans-serif;
+	color: black;
+	margin: 0px;
+}
+a {	font: verdana, helvetica, sans-serif, tahoma, verdana; text-decoration: none; }
+a:link {color: #900066}
+a:visited {color: #700050}
+a:active {font-weight: bold;}
+a:hover {
+	color: #CC0066;
+	font-weight: bold;
+}
+p {font: 12px verdana, arial, helvetica}
+b {font-weight:bold}
+tr {verdana, helvetica, sans-serif, tahoma, verdana; }
+td {verdana, helvetica, sans-serif, tahoma, verdana; }
+ul {font: 12px  verdana, helvetica, sans-serif, tahoma, verdana; } 
+ol {font: 12px  verdana, helvetica, sans-serif, tahoma, verdana; } 
+li {font: 12px verdana, helvetica, sans-serif, tahoma; } 
+h1 {font: bold 13px verdana, sans-serif, helvetica, tahoma; color: #6F0047; }
+h2 {font: 12px sans-serif, verdana, helvetica, tahoma, verdana; color: black; font-weight: bold;}
+textarea  {font: 12px verdana, helvetica, sans-serif, tahoma; } 
+
+.menu {
+	text-align: left;
+	font-size: 12px;
+	color: #FFFFFF;
+	background-color: #3366CC;
+	padding: 5px;
+}
+a.menu { color: #FFFFFF; }
+a.menu:link {color: #FFFFFF}
+a.menu:visited {color: #FFFFFF}
+a.menu:active {color: #FFFF00}
+a.menu:hover {color: #FFFFFF}
+
+.menu_panel {
+	background-color: #E4ECF3}
+
+.app_title {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background:#3366CC
+}
+.screen_title {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	background-color: #91ABE3;
+	font-weight: bold;
+	color: #000000;
+	padding-left: 15px;
+}
+
+.frame {
+	border: 0.5px solid #6F0047;
+
+
+}
+.search_frame {
+	border: 1px solid #6F0047;
+	background-color: #E4ECF3;
+
+
+}
+.search_button {
+	font-size: 10px;
+	height: 20px;
+}
+.search_input {
+	font-size: 14px;
+}
+.seach_label {
+	font-size: 14px;
+}
+
+.data_table {
+	background-color: #F0F4F9;
+	border: 0.5px solid #6F0047;
+}
+.data_header {
+	font-size: 14px;
+	color: #FFFFFF;
+	background-color: #3366CC;
+	text-decoration: none
+}
+a.data_header {
+	font-size: 10px;
+	color: #FFFFFF;
+	background-color: #B57194;
+	text-decoration: none;
+}
+a.data_header:hover {
+	color: #FFFFA0;
+}
+a.data_header:active {
+	color: #FFFFA0;
+}
+.data_row {
+	font-size: 14px;
+	background-color: #F7F8F9;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.data_row2 {
+	font-size: 14px;
+	background-color: #E4ECF3;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.data_col_code { text-align: center }
+.data_col_text { text-align: left }
+.data_col_date { text-align: center }
+.data_col_num {  text-align: right }
+.data_col_currency { text-align: right }
+.colaccio { text-align: center }
+.colbotons { text-align: center; white-space: nowrap }
+
+.scroller {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+.scroller_active {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.botoimg {
+	font-size: 10px;
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left: 16px;
+	height: 22px;
+
+}
+.label {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+.textCodi {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-color: #EEF8FF;
+	text-align: center;
+	border: 1px solid #000000;
+	font-weight: normal;
+	padding-right: 2px;
+	padding-left: 2px;
+}
+.textNom {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-color: #EEF8FF;
+	text-align: left;
+	border: 1px solid #000000;
+	font-weight: normal;
+	padding-left: 2px;
+
+
+}
+.textData {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-color: #EEF8FF;
+	text-align: center;
+	border: 1px solid #000000;
+	padding-right: 2px;
+	padding-left: 2px;
+
+}
+.textNulo {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-color: #EEEEEE;
+	text-align: center;
+	border: 1px solid #000000;
+	font-weight: normal;
+}
+.inputCodiDisabled {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-color: #EEF8FF;
+	text-align: center;
+}
+.inputTextDisabled {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-color: #EEF8FF;
+	text-align: left;;
+	color: #000000
+}
+.error{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #880058;
+	font-weight: bold
+}
+.errorTitol{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #880058;
+	font-weight: bold
+}
