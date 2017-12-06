@@ -18,28 +18,28 @@ public class API {
 	public void createCompany() {  // remove static
 		Company company = new Company();
 		company.setName("company test");
-		databaseInsertion("INSERT INTO company (name) VALUES " + company.getName());		
+		databaseInsertion("INSERT INTO company (name) VALUES (\'" + company.getName() + "\');");		
 	}
 	
 	public void createProject() {
 		Project project = new Project();
 		project.setName("project test");
 		project.setIdCompany(1);
-		databaseInsertion("INSERT INTO project (name, id_company) VALUES " + project.getName() + " AND " + project.getIdCompany());
+		databaseInsertion("INSERT INTO project (name, id_company) VALUES (\'" + project.getName() + "\'," + project.getIdCompany() + ");");
 	}	
 	
 	public void createUser() {
 		User user = new User();
 		user.setName("user test");
 		user.setIdCompany(1);
-		databaseInsertion("INSERT INTO users (name, id_company) VALUES " + user.getName() + " AND " + user.getIdCompany());
+		databaseInsertion("INSERT INTO users (name, id_company) VALUES (\'" + user.getName() + "\'," + user.getIdCompany() + ");");
 	}
 	
 	public void createAssignation() {
 		Assigned assignation = new Assigned();
 		assignation.setIdProject(1);
 		assignation.setIdUser(1);
-		databaseInsertion("INSERT INTO assigned (id_project, id_user) VALUES " + assignation.getIdProject() + " AND " + assignation.getIdUser());
+		databaseInsertion("INSERT INTO assigned (id_project, id_user) VALUES (" + assignation.getIdProject() + ", " + assignation.getIdUser() + ");");
 	}
 		
 	public void createRegister() {
@@ -50,15 +50,16 @@ public class API {
 		register.setLatitude(0.0);
 		register.setLatitude(0.0);
 
-		databaseInsertion("INSERT INTO register (description, id_project, id_user, latitude, longitude) VALUES " + register.getDescription() + " AND " + register.getIdProject()
-			+ " AND " + register.getIdUser() + " AND " + register.getLatitude() + " AND " + register.getLongitude());
+		databaseInsertion("INSERT INTO register (description, id_project, id_user, latitude, longitude) VALUES (\'" + register.getDescription() + "\', " + register.getIdProject()
+			+ ", " + register.getIdUser() + ", " + register.getLatitude() + ", " + register.getLongitude() + ",\'" + register.getDate() + "\');");
 	}
 	
 	public void createExtraField() {
 		ExtraField extra = new ExtraField();
+		extra.setIdRegister(1);
 		extra.setType("type test");
 		extra.setValue("value test");
-		databaseInsertion("INSERT INTO company (type, value) VALUES " + extra.getType() + " AND " + extra.getValue());
+		databaseInsertion("INSERT INTO extrafield (id_register,type, value) VALUES (" + extra.getIdRegister() + ",\'" + extra.getType() + "\', \'" + extra.getValue() + "\');");
 	}
 	
 	// RETRIEVING BY ID
@@ -149,7 +150,7 @@ public class API {
 	
 	public ArrayList<ExtraField> getAllExtByRegister(int idRegister) throws SQLException{
 		ArrayList<ExtraField> extras = new ArrayList<>();
-		ResultSet resultSet= databaseSelection("SELECT * FROM extrafield WEHRE id_register = " + idRegister);
+		ResultSet resultSet= databaseSelection("SELECT * FROM extrafield WHERE id_register = " + idRegister);
 		while(resultSet.next()) {
 			ExtraField extra = new ExtraField();
 			extra.setId(resultSet.getInt(0));
