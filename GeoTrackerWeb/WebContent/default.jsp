@@ -48,5 +48,10 @@ body {
   </tr>
 </table>
 
+<form method="get" action ="GeoTrackerWeb">
+<input type = "submit" value ="Going to the servlet">
+
+</form>
+
 </body>
 </html>
