@@ -9,7 +9,7 @@
           <td class="menu"><a href="users.jsp" class="menu">Users</a></td>
         </tr>
         <tr> 
-          <td class="menu"><a href="#" class="menu">Projects</a></td>
+          <td class="menu"><a href="projects.jsp" class="menu">Projects</a></td>
         </tr>
          <tr> 
           <td class="menu"><a href="#" class="menu">Records</a></td>
