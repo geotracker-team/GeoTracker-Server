@@ -12,7 +12,7 @@
           <td class="menu"><a href="#" class="menu">Projects</a></td>
         </tr>
          <tr> 
-          <td class="menu"><a href="#" class="menu">Records</a></td>
+          <td class="menu"><a href="records.jsp" class="menu">Records</a></td>
         </tr>
          <tr>
            <td >&nbsp;</td>

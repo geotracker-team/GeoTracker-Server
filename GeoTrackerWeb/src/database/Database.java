@@ -10,8 +10,8 @@ public class Database {
 	
 	public static void connect() {
 		
-		System.setProperty("java.naming.factory.initial", "org.jnp.interfaces.NamingContextFactory");
-		System.setProperty("java.naming.provider.url", "localhost:1099");
+		//System.setProperty("java.naming.factory.initial", "org.jnp.interfaces.NamingContextFactory");
+		//System.setProperty("java.naming.provider.url", "localhost:1099");
 		
 		if(connection == null){
 			String status = "ok";
@@ -19,7 +19,7 @@ public class Database {
 				InitialContext cxt = new InitialContext();
 				if(cxt!=null)
 				{
-					DataSource ds = (DataSource) cxt.lookup("java:jboss/PostgresXA");
+					DataSource ds = (DataSource) cxt.lookup("java:jboss/datasources/GeoTracker");
 					if (ds==null) status ="Error lookup";
 					else
 					{
