@@ -19,7 +19,7 @@ public class Database {
 				InitialContext cxt = new InitialContext();
 				if(cxt!=null)
 				{
-					DataSource ds = (DataSource) cxt.lookup("java:jboss/PostgresXA");
+					DataSource ds = (DataSource) cxt.lookup("java:jboss/datasources/GeoTracker");
 					if (ds==null) status ="Error lookup";
 					else
 					{

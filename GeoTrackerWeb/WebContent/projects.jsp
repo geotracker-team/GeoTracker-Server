@@ -5,17 +5,24 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<link href="css/geotracker.css" rel="stylesheet" type="text/css">
 	<script language="javascript" type="text/javascript" src="js/mm_functions.js"></script>
-	<script language="javascript" type="text/javascript" src="js/users.js"></script>
+	<script language="javascript" type="text/javascript" src="js/projects.js"></script>
 </head>
-<%@ page import="java.util.ArrayList, java.util.Iterator" %>
-<%@ page import="api.API, models.Project" %>
+<%@ page import="java.util.ArrayList, java.util.Iterator, java.util.HashMap" %>
+<%@ page import="api.*, models.*" %>
 <%
 	Project project;
-	ArrayList<Project> projects;
+	Company company;
 	
-	API api = new API();
-//	projects = api.getAllProjects(1);
-	projects = null;
+	ProjectsAPI api = new ProjectsAPI();
+	ArrayList<Project> projects = api.getAllProjects();
+	
+	CompanysAPI companysAPI = new CompanysAPI();
+	ArrayList<Company> companys = companysAPI.getAllCompanies();
+	
+	HashMap<Integer, Company> companysMap = new HashMap<Integer, Company>();
+	for (Company c: companys) {
+		companysMap.put(new Integer(c.getId()), c);
+	}	
 %>
 <body leftmargin="0" topmargin="0" onLoad="MM_preloadImages('img/new.gif','img/new_up.gif','img/save.gif','img/save_up.gif','img/delete16_up.gif','img/delete32.gif','img/delete32_up.gif','img/edit24.gif','img/edit24_up.gif','img/edit32.gif','img/edit32_up.gif')">
 	<table width="100%" border="0" cellpadding="0" cellspacing="0"
@@ -38,9 +45,9 @@
 						<td class="screen_title">Projects</td>
 					</tr>
 				</table> 
-				<form action="projectsServlet"></form>
-				<input type="hidden" id="action" name="action"/> 
-
+				<form action="ProjectsServlet" method="post" id="form_data" name="form_data">
+				<input type="hidden" id="action" name="action" value="" /> 
+				<br/>
 				<table width="75%" cellpadding="0" cellspacing="2" align="center"
 					class="data_table" id="data_table">
 					<tr>
@@ -55,79 +62,57 @@
 				Iterator<Project> iterator = projects.iterator();
 				while (iterator.hasNext()) {
 					project = (Project) iterator.next();
+					company = (Company) companysMap.get(new Integer(project.getIdCompany()));
+					
 %>
+
 					<tr class="data_row">
-						<td class="data_col_code"><%=project.getId() %></td>
-						<td class="data_col_text"><%=project.getName() %></td>
-						<td class="data_col_text"><%=project.getIdCompany() %></td>
+						<td class="data_col_code" id="codeRow<%=project.getId() %>"><%=project.getId() %></td>
+						<td class="data_col_text" id="nameRow<%=project.getId() %>"><%=project.getName() %></td>
+						<td class="data_col_text" id="companyRow<%=project.getId() %>">
+							<input type="hidden" id="company<%=project.getId() %>" value="<%=project.getIdCompany() %>" />						
+<%							if (company != null) 
+								out.println(company.getName()); 
+%>
+						</td>
+						<td align="center" nowrap="nowrap">
+							<a  onClick="return edit(<%=project.getId() %>);" id="btnEdit<%=project.getId() %>" name="btnEdit<%=project.getId() %>"
+								onMouseOut="MM_swapImgRestore()" style="display: block; cursor: pointer;"
+								onMouseOver="MM_swapImage('btnEditImg<%=project.getId() %>','','img/edit24_up.gif',1)">
+								<img src="img/edit24.gif" alt="Edit user" name="btnEditImg<%=project.getId() %>" id="btnEditImg<%=project.getId() %>" width="24" height="24" border="0"></a>
+								
+							<a onClick="return save(<%=project.getId() %>);" id="btnSave<%=project.getId() %>" name="btnSave<%=project.getId() %>"
+								onMouseOut="MM_swapImgRestore()" style="display: none; cursor: pointer;"
+								onMouseOver="MM_swapImage('btnSaveImg<%=project.getId() %>','','img/save24_up.gif',1)">
+								<img src="img/save24.gif" alt="Save user data" name="btnSaveImg<%=project.getId() %>" id="btnSaveImg<%=project.getId() %>" width="24" height="24" border="0"></a>
+						</td>
 						<td align="center">
-							<a href="#" onClick="return edit();"
-								onMouseOut="MM_swapImgRestore()" 
-								onMouseOver="MM_swapImage('btnEdit1','','img/edit24_up.gif',1)"><img src="img/edit24.gif" alt="Edit user" name="btnEdit1" width="24" height="24" border="0"></a>
-								&nbsp;
-								<a href="#" onClick="return save();" 
-								onMouseOut="MM_swapImgRestore()" style="visibility:hidden"
-								onMouseOver="MM_swapImage('btnSave','','img/save24_up.gif',1)"><img src="img/save24.gif" alt="Save user data" name="btnSave" width="24" height="24" border="0"></a></td>
-						<td align="center">
-							<a href="#" onClick="return deleteRecord();" 
-								onMouseOut="MM_swapImgRestore()" 
-								onMouseOver="MM_swapImage('btnDelete','','img/delete24_up.gif',1)"><img src="img/delete24.gif" alt="Delete user" name="btnDelete" width="24" height="24" border="0"></a></td>
+							<a  onClick="return deleteProject(<%=project.getId() %>);" 
+								onMouseOut="MM_swapImgRestore()" style="cursor: pointer;"
+								onMouseOver="MM_swapImage('btnDelete<%=project.getId() %>','','img/delete24_up.gif',1)">
+								<img src="img/delete24.gif" alt="Delete user" id="btnDelete<%=project.getId() %>" name="btnDelete<%=project.getId() %>" width="24" height="24" border="0"></a>
+						</td>
 					</tr>
 <% 		} 
 	}
-	%>					
-					<tr class="data_row">
-						<td class="data_col_code">2</td>
-						<td class="data_col_text">Mushroom predictor </td>
-						<td class="data_col_text">UdL</td>
-						<td align="center">
-							<a href="#" onMouseOut="MM_swapImgRestore()" 
-								onMouseOver="MM_swapImage('btnEdit2','','img/edit24_up.gif',1)">
-								<img src="img/edit24.gif" alt="Edit user" name="btnEdit2" width="24" height="24" border="0"></a>						</td>
-						<td align="center">
-							<a href="#" onMouseOut="MM_swapImgRestore()" 
-								onMouseOver="MM_swapImage('btnDelete2','','img/delete24_up.gif',1)"><img src="img/delete24.gif" alt="Delete user" name="btnDelete2" width="24" height="24" border="0"></a></td>
-					</tr>
-					<tr class="data_row">
-						<td class="data_col_code">3</td>
-						<td class="data_col_text">Excursion tracker </td>
-						<td class="data_col_text">UdL</td>
-						<td align="center">
-							<a href="#" onMouseOut="MM_swapImgRestore()" 
-								onMouseOver="MM_swapImage('btnEdit3','','img/edit24_up.gif',1)"><img src="img/edit24.gif" alt="Edit user" name="btnEdit3" width="24" height="24" border="0"></a></td>
-						<td align="center">
-							<a href="#" onMouseOut="MM_swapImgRestore()" 
-								onMouseOver="MM_swapImage('btnDelete3','','img/delete24_up.gif',1)"><img src="img/delete24.gif" alt="Delete user" name="btnDelete3" width="24" height="24" border="0"></a></td>
-					</tr>
-					<tr class="data_row">
-						<td class="data_col_code">4</td>
-						<td class="data_col_text">EPS project tracker </td>
-						<td class="data_col_text">UdL</td>
-						<td align="center">
-							<a href="#" onMouseOut="MM_swapImgRestore()" 
-								onMouseOver="MM_swapImage('btnEdit4','','img/edit24_up.gif',1)"><img src="img/edit24.gif" alt="Edit user" name="btnEdit4" width="24" height="24" border="0"></a></td>
-						<td align="center">
-							<a href="#" onMouseOut="MM_swapImgRestore()" 
-								onMouseOver="MM_swapImage('btnDelete4','','img/delete24_up.gif',1)"><img src="img/delete24.gif" alt="Delete user" name="btnDelete4" width="24" height="24" border="0"></a></td>
-					</tr>
-					<tr class="data_row">
-					  <td class="data_col_code"><span class="textcerca">
-					    <input type="text" id="code"
-							name="code" size="10" maxlength="10" class="search_input" />
-					  </span></td>
-					  <td class="data_col_text"><span class="textcerca">
-					    <input type="text" id="name" name="name" size="40"
-							maxlength="50" class="search_input" />
-					  </span></td>
-					  <td class="data_col_text"><span class="textcerca">
-					    <select id="company" name="company" style="width:200px">
-                          <option value="0" selected>(Select company)</option>
-                          <option value="1">Company 1</option>
-                          <option value="2">Company 2</option>
-                          <option value="3">UdL</option>
-                        </select>
-					  </span></td>
-					  <td align="center"><a href="#"  onClick="return add();"
+	%>
+										
+					<tr class="data_row">	
+						<td class="data_col_code" id="codeAddRow">&nbsp;
+							<input type="hidden" id="code" name="code" value="" size="10" maxlength="20" />
+						</td>
+						<td class="data_col_text" id="nameAddRow">
+							<input type="text" id="name" name="name" value="" size="50" maxlength="255" />
+						</td>
+						<td class="data_col_text" id="companyAddRow">
+							<select id="company" name="company" style="width:200px">
+	                          <option value="0" selected>(Select company)</option>
+<%							  	for (Company c: companys) {	%>
+							  		<option value="<%=c.getId() %>"><%=c.getName() %></option>
+<%							  } %>	                          
+	                        </select>						
+	                    </td>	
+					  <td align="center"><a onClick="return add();" style="cursor: pointer;"
 								onMouseOut="MM_swapImgRestore()" 
 								onMouseOver="MM_swapImage('btnNew','','img/new24_up.gif',1)"><img src="img/new24.gif" alt="New user" name="btnNew" width="24" height="24" border="0"></a></td>
 					  <td align="center">&nbsp;</td>

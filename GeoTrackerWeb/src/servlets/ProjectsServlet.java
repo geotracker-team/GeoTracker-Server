@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import api.API;
+import api.ProjectsAPI;
 import models.Project;
 
 /**
@@ -56,37 +59,44 @@ public class ProjectsServlet extends HttpServlet {
 		HttpSession session;
 		String strAction;
 		String strResul;
-		API api = new API();
-		ArrayList<Project> projects;
+		ProjectsAPI projectsAPI;
 		Project project = null;
-		int intCode;
-		String strName;
-		int intCompany;
-
+		int intCode = 0, intCompany;
+		String strCode, strName, strCompany;
+ 
 		// Getting parameter information
 		strAction = request.getParameter("action");
-		intCode = Integer.parseInt(request.getParameter("code"));
+		strCode = request.getParameter("code");
 		strName = request.getParameter("name");
-		intCompany = Integer.parseInt(request.getParameter("code"));
-		project = new Project(intCode, strName, intCompany);
+		strCompany = request.getParameter("company");
+		if ((strCode == null) || (strCode.equals("")))
+			intCode = 0;
+		else
+			intCode = Integer.parseInt(strCode);
 
+		if (strCompany != null)
+			intCompany = Integer.parseInt(strCompany);
+		else
+			intCompany = 0;			
+		
+		project = new Project(intCode, strName, intCompany);
+		
+		projectsAPI = new ProjectsAPI();
+		
 		// Process information
 		strResul = "ok";
 		switch (strAction) {
-		case "load":
-			System.out.println("load");
-			break;
 		case "add":
-//			apiProject.createProject(project);
-			System.out.println("add");
+			projectsAPI.createProject(project);
+			System.out.println("add: " + project.toString());
 			break;
 		case "save":
-//			apiProject.updateProject(project);
-			System.out.println("save");			
+			projectsAPI.updateProject(project);
+			System.out.println("save:" + project.toString());			
 			break;
 		case "delete":
-//			apiProject.deleteProject(project);
-			System.out.println("delete");
+			projectsAPI.deleteProject(project);
+			System.out.println("delete: " + project.toString());
 			break;
 		}
 		
@@ -95,11 +105,21 @@ public class ProjectsServlet extends HttpServlet {
 		// Return result
 		
 		session = request.getSession(true);
-		session.setAttribute("models.project", project);
 		session.setAttribute("resul", strResul);
-		session.setAttribute(errmessage, Incorrect user);
-		// session.setAttribute("projects", projects);
 
+		
+		//	Redirect
+		try {
+			
+			ServletContext context = getServletContext();
+			RequestDispatcher rd = context.getRequestDispatcher("/projects.jsp");
+			rd.forward(request,  response);
+			
+		} catch(Exception e)	{
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		
 	}
 
 }
