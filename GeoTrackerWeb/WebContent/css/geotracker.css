@@ -14,7 +14,7 @@ a:hover {
 p {font: 12px verdana, arial, helvetica}
 b {font-weight:bold}
 tr {verdana, helvetica, sans-serif, tahoma, verdana; }
-td {verdana, helvetica, sans-serif, tahoma, verdana; }
+td {verdana, helvetica, sans-serif, tahoma, verdana; text-align: left;}
 ul {font: 12px  verdana, helvetica, sans-serif, tahoma, verdana; } 
 ol {font: 12px  verdana, helvetica, sans-serif, tahoma, verdana; } 
 li {font: 12px verdana, helvetica, sans-serif, tahoma; } 
@@ -22,6 +22,25 @@ h1 {font: bold 13px verdana, sans-serif, helvetica, tahoma; color: #6F0047; }
 h2 {font: 12px sans-serif, verdana, helvetica, tahoma, verdana; color: black; font-weight: bold;}
 textarea  {font: 12px verdana, helvetica, sans-serif, tahoma; } 
 div{margin: auto;width: 50%;padding: 10px;}
+th {
+    background-color: #3366CC;
+    color: white;
+    text-align: left;
+    padding: 8px;
+    font-size:12px;
+}
+#pad
+{
+	padding:8px;	
+}
+input[type="text"] {
+    width: 150px;
+    margin-bottom: 10px;
+    background-color: white;
+    border:2px solid #E4ECF3;
+}
+
+tr:nth-child(even){background-color: #E4ECF3}
 
 
 .menu {
@@ -93,9 +112,8 @@ a.menu:hover {color: #FFFFFF}
 }
 
 .data_table {
-	background-color: rgb(228,236,243);
-	color: black;
-	border:1px solid blue;
+	border-collapse: collapse;
+	border:transparent;
 }
 .data_header {
 	font-size: 14px;
@@ -125,7 +143,7 @@ a.data_header:active {
 	background-color: #E4ECF3;
 	font-family: Arial, Helvetica, sans-serif;
 }
-.data_col_code { text-align: center }
+.data_col_code { text-align: center; padding:8px; border:transparent; font-size:12px;}
 .data_col_text { text-align: left }
 .data_col_date { text-align: center }
 .data_col_num {  text-align: right }

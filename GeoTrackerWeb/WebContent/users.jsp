@@ -38,7 +38,7 @@
 						<td class="screen_title">Users</td>
 					</tr>
 				</table> 
-				<form action="UserServlet">
+				<form action="UserServlet" id="form_data">
 				<br/>
 				<input type="hidden" id="action" name="action"/> 
 				
@@ -49,7 +49,7 @@
 
 
 				
-					<table align='center' cellspacing=2 cellpadding=5 id="data_table" border=1 class="data_table">
+<table align='center' cellspacing=2 cellpadding=5 id="data_table" border=1 class="data_table">
 <tr>
 <th>Code</th>
 <th>Name</th>
@@ -58,29 +58,26 @@
 <%
 			if (users != null) {
 				Iterator<User> iterator = users.iterator();
-				int row = 0;
 				while (iterator.hasNext()) {
 					user = (User) iterator.next();
-					row = row + 1;
 %>
 
-<tr id="row">
-<td class="data_col_code" id="codeRow<%=user.getId() %>"><%=user.getId() %></td>
-<td class="data_col_code" id="nameRow<%=user.getName() %>"><%=user.getName() %></td>
-<td class="data_col_code" id="passRow<%=user.getPassword() %>"><%=user.getPassword() %></td>
-<td><img src="img/edit.png" width="20" height="20" onclick="edit_row(1)"></td>
-<td><img src="img/save.png" width="20" height="20" onclick="save_row(1)"></td>
-<td><img src="img/delete.png" width="20" height="20" onclick="delete_row(1)"></td>
+<tr id="row<%=user.getId() %>">
+<td class="data_col_code" id="name_row<%=user.getId() %>"><%=user.getId() %></td>
+<td class="data_col_code" id="nameRow<%=user.getId() %>"><%=user.getName() %></td>
+<td class="data_col_code" id="passRow<%=user.getId() %>"><%=user.getPassword() %></td>
+<td class="data_col_code"><img src="img/edit32.gif" width="16" height="16" onclick="edit_row(<%=user.getId() %>)" id="edit_button<%=user.getId() %>"></td>
+<td class="data_col_code"><img src="img/delete32.gif" width="16" height="16" onclick="deleteProject(<%=user.getId() %>)" id="delete_button<%=user.getId() %>"></td>
 </tr>
 
 <% 		} 
 	}
 	%>
 <tr>
-<td><input type="text" id="new_code"></td>
-<td><input type="text" id="new_name"></td>
-<td><input type="text" id="new_pass"></td>
-<td><img src="img/row.png" class="add" onclick="add_row();" width="20" height="20"></td>
+<td class="data_col_code"><input type="text" id="new_code"></td>
+<td class="data_col_code"><input type="text" id="new_name"></td>
+<td class="data_col_code"><input type="text" id="new_pass"></td>
+<td class="data_col_code"><img src="img/new16.gif" class="add" onclick="add();" width="16" height="16"></td>
 </tr>
 </table>
 				</form>

@@ -61,28 +61,36 @@ public class UserServlet extends HttpServlet {
 		String strResul;
 		API api = new API();
 		ArrayList<User> users;
-		UserAPI usersAPI;
+		UserAPI usersAPI = new UserAPI();
 		User user = null;
 		int intCode = 0;
 		String strCode, strName, strPassword;
  
 		// Getting parameter information
 		strAction = request.getParameter("action");
-		strCode = request.getParameter("code_row1");
+		strCode = request.getParameter("new_code");
 		if ((strCode == null) || (strCode.equals("")))
 			intCode = 0;
 		else
 			intCode = Integer.parseInt(strCode);
-		strName = request.getParameter("name_row1");
-		strPassword = request.getParameter("pass_row1");
-		user = new User(intCode,strName,strPassword);
-		usersAPI = new UserAPI();
+		
+		strName = request.getParameter("nameRow"+ strCode);
+		strPassword = request.getParameter("passRow"+ strCode);
+		
+		user = new User(intCode,strName,1,strPassword);
+		
+		//usersAPI = new UserAPI();
 		
 		// Process information
 		strResul = "ok";
 		switch (strAction) {
 		case "add":
-			usersAPI.createUser(user);
+			try {
+				usersAPI.createUser(user);
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 			System.out.println("add: " + user.toString());
 			break;
 		case "save":
@@ -90,7 +98,12 @@ public class UserServlet extends HttpServlet {
 			System.out.println("save:" + user.toString());			
 			break;
 		case "delete":
-			usersAPI.deleteUser(user);
+			try {
+				usersAPI.deleteUser(user);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			System.out.println("delete: " + user.toString());
 			break;
 		}

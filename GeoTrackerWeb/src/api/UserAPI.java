@@ -12,19 +12,10 @@ public class UserAPI {
 	private Statement statement = null;
 	private ResultSet resultSet = null;
 	
-	public void createUser() {
-		User user = new User();
-		user.setName("user test");
-		user.setIdCompany(1);
-		databaseInsertion("INSERT INTO users (name, id_company) VALUES " + user.getName() + " AND " + user.getIdCompany());
+	public void createUser(User user) throws SQLException {
+		
 	}
-	public void createUser(User user) {
-		String query;
-
-		query = "INSERT INTO project (name, id_company, password)";
-		query = query + " VALUES('" + user.getName() + "', " + user.getIdCompany() + "', " + user.getPassword() + ")";
-		databaseExecution(query);
-	}
+	
 	public void updateUser(User user) {
 		String query;
 		
@@ -34,11 +25,19 @@ public class UserAPI {
 		        "WHERE id = " + user.getId();
 		databaseExecution(query);
 	}
-	public void deleteUser(User user) {
-		String query;
+	public void deleteUser(User user) throws SQLException{
+		Statement statement = null;	
+		ResultSet resultSet = null;
+		//ResultSet resultSet= databaseSelection("SELECT * FROM register");
+		String query = "DELETE FROM users WHERE id = " + user.getId();
+		//ResultSet resultSet= databaseSelection("SELECT * FROM users WHERE id = " + id);
+		Database.connect();
+		statement = (Statement) Database.connection.createStatement();
+		resultSet = statement.executeQuery(query);
 		
-		query = "DELETE FROM project WHERE id = " + user.getId();
-		databaseExecution(query);
+		
+		statement.close();
+		Database.disconnect();
 	}
 	public ArrayList<User> getAllUsers() throws SQLException{
 		ArrayList<User> users = new ArrayList<>();

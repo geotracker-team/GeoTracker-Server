@@ -65,14 +65,14 @@
 					record = (Record) iterator.next();
 %>
 
-<tr>
-<td><%=record.getId() %></td>
-<td><%=record.getDescription() %></td>
-<td><%=record.getDate() %></td>
-<td><%=record.getIdProject() %></td>
-<td><%=record.getIdUser() %></td>
-<td><%=record.getLatitude() %></td>
-<td><%=record.getLongitude() %></td>
+<tr id="row">
+<td class="data_col_code"><%=record.getId() %></td>
+<td class="data_col_code"><%=record.getDescription() %></td>
+<td class="data_col_code"><%=record.getDate() %></td>
+<td class="data_col_code"><%=record.getIdProject() %></td>
+<td class="data_col_code"><%=record.getIdUser() %></td>
+<td class="data_col_code"><%=record.getLatitude() %></td>
+<td class="data_col_code"><%=record.getLongitude() %></td>
 
 </tr>
 

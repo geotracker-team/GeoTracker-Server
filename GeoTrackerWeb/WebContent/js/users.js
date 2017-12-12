@@ -1,19 +1,69 @@
+function add() {
+//	alert("add");
+	if (validateAdd()) {
+		document.getElementById("action").value = "add";
+		document.getElementById("form_data").submit();	
+		return true;
+	} else {
+		return false;
+	}
+}
+function validateAdd()
+{
+	result = true;
+	if (document.getElementById("new_name").value == "") {
+		alert("User name is required");
+		result = false;
+	} else {
+		if (document.getElementById("new_pass").value == "") {
+			alert("User password is required");
+			result = false;
+		}
+	}	
+	return result;
+}
+function deleteProject(id) {
+	alert("Delete");
+	if (validateDelete()) {
+		document.getElementById("action").value = "delete";
+		document.getElementById("new_code").value = id;
+		document.getElementById("form_data").submit();	
+		//document.getElementById("row"+id+"").outerHTML="";
+		return true;
+	} else {
+		return false;
+	}
+	
+}
+
+function validateDelete() {
+	
+	//	Pending validate there aren't records associated
+	if (confirm("Are you sure to delete the project?")) {
+		
+		result = true;
+	} else {
+		result = false;
+	}
+	return result;
+}
+
 function edit_row(no)
 {
  document.getElementById("edit_button"+no).style.display="none";
  document.getElementById("save_button"+no).style.display="block";
 	
- var code=document.getElementById("code_row"+no);
+ var id=document.getElementById("id_row"+no);
  var name=document.getElementById("name_row"+no);
- var pass=document.getElementById("pass_row"+no);
+ var password=document.getElementById("pass_row"+no);
 	
- var code_data=code.innerHTML;
+ var id_data=id.innerHTML;
  var name_data=name.innerHTML;
- var pass_data=pass.innerHTML;
+ var pass_data=password.innerHTML;
 	
- code.innerHTML="<input type='text' id='code_text"+no+"' value='"+code_data+"'>";
+ id.innerHTML="<input type='text' id='id_text"+no+"' value='"+id_data+"'>";
  name.innerHTML="<input type='text' id='name_text"+no+"' value='"+name_data+"'>";
- pass.innerHTML="<input type='text' id='pass_text"+no+"' value='"+pass_data+"'>";
+ password.innerHTML="<input type='text' id='pass_text"+no+"' value='"+pass_data+"'>";
 }
 
 function save_row(no)
@@ -43,7 +93,7 @@ function add_row()
 	
  var table=document.getElementById("data_table");
  var table_len=(table.rows.length)-1;
- var row = table.insertRow(table_len).outerHTML="<tr id='row"+table_len+"'><td id='code_row"+table_len+"'>"+new_code+"</td><td id='name_row"+table_len+"'>"+new_name+"</td><td id='pass_row"+table_len+"'>"+new_pass+"</td><td><img src='img/edit.png' id='edit_button"+table_len+"'class='edit' onclick='edit_row("+table_len+")' width='20' height='20'> <img src='img/save.png' id='save_button"+table_len+"' class='save' onclick='save_row("+table_len+")' width='20' height='20'> <img src='img/delete.png' class='delete' onclick='delete_row("+table_len+")' width='20' height='20'></td></tr>";
+ var row = table.insertRow(table_len).outerHTML="<tr id='row"+table_len+"'><td class='data_col_code' id='id_row"+table_len+"'>"+new_code+"</td><td class='data_col_code' id='name_row"+table_len+"'>"+new_name+"</td><td class='data_col_code' id='pass_row"+table_len+"'>"+new_pass+"</td><td class='data_col_code'><img src='img/edit32.gif' id='edit_button"+table_len+"'class='edit' onclick='edit_row("+table_len+")' width='16' height='16'></td><td class='data_col_code'><img src='img/delete32.gif' class='delete' onclick='delete_row("+table_len+")' width='16' height='16'></td></tr>";
 
  document.getElementById("new_code").value="";
  document.getElementById("new_name").value="";
