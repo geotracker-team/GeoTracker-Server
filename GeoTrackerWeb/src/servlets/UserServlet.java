@@ -1,8 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -13,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import api.API;
+
 import api.UserAPI;
 import models.User;
 
@@ -59,38 +57,37 @@ public class UserServlet extends HttpServlet {
 		HttpSession session;
 		String strAction;
 		String strResul;
-		API api = new API();
-		ArrayList<User> users;
-		UserAPI usersAPI = new UserAPI();
+		UserAPI usersAPI;
 		User user = null;
-		int intCode = 0;
-		String strCode, strName, strPassword;
+		int intCode = 0, intCompany;
+		String strCode, strName, strCompany, strPassword;
  
 		// Getting parameter information
 		strAction = request.getParameter("action");
-		strCode = request.getParameter("new_code");
+		strCode = request.getParameter("code");
+		strName = request.getParameter("name");
+		strCompany = request.getParameter("company");
+		strPassword = request.getParameter("pass");
+		
 		if ((strCode == null) || (strCode.equals("")))
 			intCode = 0;
 		else
 			intCode = Integer.parseInt(strCode);
+
+		if (strCompany != null)
+			intCompany = Integer.parseInt(strCompany);
+		else
+			intCompany = 0;			
 		
-		strName = request.getParameter("nameRow"+ strCode);
-		strPassword = request.getParameter("passRow"+ strCode);
+		user = new User(intCode, strName, intCompany, strPassword);
 		
-		user = new User(intCode,strName,1,strPassword);
-		
-		//usersAPI = new UserAPI();
+		usersAPI = new UserAPI();
 		
 		// Process information
 		strResul = "ok";
 		switch (strAction) {
 		case "add":
-			try {
-				usersAPI.createUser(user);
-			} catch (SQLException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
+			usersAPI.createUser(user);
 			System.out.println("add: " + user.toString());
 			break;
 		case "save":
@@ -98,25 +95,14 @@ public class UserServlet extends HttpServlet {
 			System.out.println("save:" + user.toString());			
 			break;
 		case "delete":
-			try {
-				usersAPI.deleteUser(user);
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			usersAPI.deleteUser(user);
 			System.out.println("delete: " + user.toString());
 			break;
 		}
 		
-		// projects = api.getAllProjects();
-
-		// Return result
 		
 		session = request.getSession(true);
-//		session.setAttribute("models.project", project);
 		session.setAttribute("resul", strResul);
-	//	session.setAttribute(errmessage, Incorrect user);
-		// session.setAttribute("projects", projects);
 
 		
 		//	Redirect
