@@ -12,8 +12,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import models.Project;
-import models.User;
+import models.Record;
 import api.API;
+import api.ProjectsAPI;
 
 @RequestScoped
 @Path("")
@@ -21,21 +22,50 @@ import api.API;
 @Consumes({ "application/xml", "application/json" })
 public class WebService {
 
-	private static final API api = new API();
-	
+		
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/projects")
-	public Project[] getProjectsOfUser() throws SQLException	
+	@Path("/projects/{name}")
+	public Project[] getProjectsOfUser(@PathParam("name") String name) throws SQLException	
 	{
-		ArrayList<Project> projects = api.getAllProjects(1);
+		ProjectsAPI api = new ProjectsAPI();
+		ArrayList<Project> projects = api.getAllProjectsByUser(name);	
 		
 		return projects.toArray(new Project[0]);
 	}	
-
-
-
+	
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/records/{name}")
+	public Record[] getRecordsOfUser(@PathParam("name") String name) throws SQLException	
+	{
+		API api = new API();
+		ArrayList<Record> projects = api.getAllRegistersByUserName(name);	
+		
+		return projects.toArray(new Record[0]);
+	}
+	
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/record")
+	public String addRegister() throws SQLException	
+	{
+		Record record = new Record();
+		//record.setId(resultSet.getInt(1));
+		record.setDescription("rest service description test");
+		record.setDate("17/12/2017");
+		record.setIdUser(3);
+		record.setIdProject(3);
+		record.setLatitude(1);
+		record.setLongitude(1);	
+						
+		API api = new API();
+		api.createRegister(record);;	
+		
+		return "Record added succesfully";
+	}	
+
+	/*@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/text")
 	public String hello()
@@ -56,5 +86,5 @@ public class WebService {
 		users[0].setPassword("123123");
 		
 		return users;
-	}
+	}*/
 }

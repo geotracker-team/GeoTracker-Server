@@ -42,16 +42,16 @@ public class API {
 		databaseInsertion("INSERT INTO assigned (id_project, id_user) VALUES (" + assignation.getIdProject() + ", " + assignation.getIdUser() + ");");
 	}
 		
-	public void createRegister() {
-		Register register = new Register();
+	public void createRegister(Record record) {
+		/*Register register = new Register();
 		register.setDescription("register test");
 		register.setIdProject(1);
 		register.setIdUser(1);
 		register.setLatitude(0.0);
-		register.setLatitude(0.0);
+		register.setLatitude(0.0);*/
 
-		databaseInsertion("INSERT INTO register (description, id_project, id_user, latitude, longitude, date) VALUES (\'" + register.getDescription() + "\', " + register.getIdProject()
-			+ ", " + register.getIdUser() + ", " + register.getLatitude() + ", " + register.getLongitude() + ",\'" + register.getDate() + "\');");
+		databaseInsertion("INSERT INTO register (description, id_project, id_user, latitude, longitude, date) VALUES (\'" + record.getDescription() + "\', " + record.getIdProject()
+			+ ", " + record.getIdUser() + ", " + record.getLatitude() + ", " + record.getLongitude() + ",\'" + record.getDate() + "\');");
 	}
 	
 	public void createExtraField() {
@@ -208,32 +208,37 @@ public class API {
 		return assignations;		
 	}
 	
-	public ArrayList<Register> getAllRegistersByUser(int idUser) throws SQLException{
+	public ArrayList<Record> getAllRegistersByUser(int idUser) throws SQLException{
 		return getAllRegisters("SELECT * FROM register WHERE id_user = " + idUser);
 	}
 	
-	public ArrayList<Register> getAllRegistersByProject(int idProject) throws SQLException{
+	public ArrayList<Record> getAllRegistersByUserName(String name) throws SQLException{
+		return getAllRegisters("SELECT r.* FROM register r, users u WHERE u.name = \'" + name +
+				"\' AND u.id = r.id_user");
+	}
+	
+	public ArrayList<Record> getAllRegistersByProject(int idProject) throws SQLException{
 		return getAllRegisters("SELECT * FROM register WHERE id_project = " + idProject);
 	}
 	
-	private ArrayList<Register> getAllRegisters(String query) throws SQLException{
-		ArrayList<Register> registers = new ArrayList<>();
+	private ArrayList<Record> getAllRegisters(String query) throws SQLException{
+		ArrayList<Record> records = new ArrayList<>();
 		ResultSet resultSet= databaseSelection(query);
 		while(resultSet.next()) {
-			Register register = new Register();
-			register.setId(resultSet.getInt(1));
-			register.setDescription(resultSet.getString(2));
-			register.setIdProject(resultSet.getInt(3));
-			register.setIdUser(resultSet.getInt(4));
-			register.setLatitude(resultSet.getDouble(5));
-			register.setLongitude(resultSet.getDouble(6));
-			register.setDate(resultSet.getString(7));			
-			registers.add(register);
-			System.out.println(register.getId() + " " + register.getDescription() + " " +  register.getIdProject() + " " + register.getIdUser() + " " +
-					register.getLatitude() + " " + register.getLongitude() + " " + register.getDate());
+			Record record = new Record();
+			record.setId(resultSet.getInt(1));
+			record.setDescription(resultSet.getString(2));
+			record.setIdProject(resultSet.getInt(3));
+			record.setIdUser(resultSet.getInt(4));
+			record.setLatitude(resultSet.getFloat(5));
+			record.setLongitude(resultSet.getFloat(6));
+			record.setDate(resultSet.getString(7));			
+			records.add(record);
+			System.out.println(record.getId() + " " + record.getDescription() + " " +  record.getIdProject() + " " + record.getIdUser() + " " +
+					record.getLatitude() + " " + record.getLongitude() + " " + record.getDate());
 		}
 		closeConnection();
-		return registers;		
+		return records;		
 	}
 	
 	public ArrayList<ExtraField> getAllExtByRegister(int idRegister) throws SQLException{
