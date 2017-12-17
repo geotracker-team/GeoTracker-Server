@@ -48,15 +48,15 @@
 				 <label for="search" id="txt">Type for search(userid or projectid)</label>  <input type="text" name="search" placeholder="search" id="search" onkeyup="Search()"><br><br><br>
 				
 
-<table align='center' cellspacing=2 cellpadding=5 id="data_table" border=1 class="data_table">
+<table align="center" cellspacing="2" cellpadding="5" id="data_table" class="data_table" width="75%">
 <tr>
-<th>ID</th>	
-<th>Description</th>
-<th>Date</th>
-<th>Project</th>
-<th>User</th>
-<th>Latitude</th>
-<th>Longitude</th>
+<th class="data_header">ID</th>	
+<th class="data_header">Description</th>
+<th class="data_header">Date</th>
+<th class="data_header">Project</th>
+<th class="data_header">User</th>
+<th class="data_header">Latitude</th>
+<th class="data_header">Longitude</th>
 </tr>
 <%
 			if (records != null) {
@@ -65,7 +65,7 @@
 					record = (Record) iterator.next();
 %>
 
-<tr id="row">
+<tr id="data_row">
 <td class="data_col_code"><%=record.getId() %></td>
 <td class="data_col_code"><%=record.getDescription() %></td>
 <td class="data_col_code"><%=record.getDate() %></td>

@@ -48,20 +48,16 @@
 				<form action="UserServlet" id="form_data">
 				<br/>
 				<input type="hidden" id="action" name="action"/> 
+				<br>
 				
-				  <img src="img/blanc.gif" width="10" height="10">
-				
-				
-				
-
-
-				
-<table align='center' cellspacing=2 cellpadding=5 id="data_table" border=1 class="data_table">
+<table align="center" cellspacing="2" cellpadding="5" id="data_table" class="data_table" width="75%">
 <tr>
-<th>Code</th>
-<th>Name</th>
-<th>Password</th>
-<th>Company</th>
+<th class="data_header">Code</th>
+<th class="data_header">Name</th>
+<th class="data_header">Password</th>
+<th class="data_header">Company</th>
+<th width="8%" class="data_header">&nbsp;</th>
+<th width="8%" class="data_header">&nbsp;</th>
 </tr>
 <%
 			if (users != null) {
@@ -129,6 +125,10 @@
 					  <td align="center" class="data_col_code">&nbsp;</td>
 				  </tr>
 			  </table>
+			  </form>
+			</td>
+		</tr>
+	</table>
 
 </body>
 </html>
