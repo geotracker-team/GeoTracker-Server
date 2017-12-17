@@ -60,7 +60,8 @@ public class UserServlet extends HttpServlet {
 		UserAPI usersAPI;
 		User user = null;
 		int intCode = 0, intCompany;
-		String strCode, strName, strCompany, strPassword;
+		String strCode, strName, strCompany, strPassword, strBool;
+		boolean isManager;
  
 		// Getting parameter information
 		strAction = request.getParameter("action");
@@ -68,6 +69,16 @@ public class UserServlet extends HttpServlet {
 		strName = request.getParameter("name");
 		strCompany = request.getParameter("company");
 		strPassword = request.getParameter("pass");
+		strBool = request.getParameter("bool");
+		
+		if(strBool == null)
+		{
+			isManager = false;
+		}
+		else
+		{
+			isManager = true;
+		}
 		
 		if ((strCode == null) || (strCode.equals("")))
 			intCode = 0;
@@ -79,7 +90,7 @@ public class UserServlet extends HttpServlet {
 		else
 			intCompany = 0;			
 		
-		user = new User(intCode, strName, intCompany, strPassword);
+		user = new User(intCode, strName, intCompany, strPassword, isManager);
 		
 		usersAPI = new UserAPI();
 		
