@@ -10,35 +10,30 @@ import models.User;
 public class UserAPI {
 	
 	private Statement statement = null;
-	private ResultSet resultSet = null;
+	//private ResultSet resultSet = null;
 	
-	public void createUser(User user) throws SQLException {
-		
+	public void createUser(User user) {
+		String query;
+
+		query = "INSERT INTO users (name,id_company,password,is_manager)\r\n" + 
+				"VALUES ('" + user.getName() + "', " +  user.getIdCompany() + ", '" + user.getPassword() + "' ," + user.IsManager() + ");";
+		databaseExecution(query);
 	}
 	
 	public void updateUser(User user) {
 		String query;
 		
-		query = "UPDATE project " +
-		        "SET name = '" + user.getName() + "'" +
-		          ", id_company = " + user.getIdCompany() + ", password = " + user.getPassword() + 
-		        "WHERE id = " + user.getId();
+		query = "UPDATE users " +
+		        " SET name = '" + user.getName()  +
+		          "', id_company = " + user.getIdCompany()  + ", password = '" + user.getPassword() + "', is_manager = " + user.IsManager() + 
+		        " WHERE id = " + user.getId();
 		databaseExecution(query);
 	}
-	public void deleteUser(User user) throws SQLException{
-		Statement statement = null;	
-		ResultSet resultSet = null;
-		//ResultSet resultSet= databaseSelection("SELECT * FROM register");
-		String query = "DELETE FROM users WHERE id = " + user.getId();
-		//ResultSet resultSet= databaseSelection("SELECT * FROM users WHERE id = " + id);
-		Database.connect();
-		statement = (Statement) Database.connection.createStatement();
-		resultSet = statement.executeQuery(query);
-		
-		
-		statement.close();
-		Database.disconnect();
-	}
+	public void deleteUser(User user) {
+		String query;
+		query = "DELETE FROM users WHERE id = " + user.getId();
+		databaseExecution(query);	
+		}
 	public ArrayList<User> getAllUsers() throws SQLException{
 		ArrayList<User> users = new ArrayList<>();
 		//ResultSet resultSet= databaseSelection("SELECT * FROM users WHERE id_company = " + idCompany);
@@ -57,6 +52,7 @@ public class UserAPI {
 			user.setName(resultSet.getString(2));
 			user.setIdCompany(resultSet.getInt(3));
 			user.setPassword(resultSet.getString(4));
+			user.setManager(resultSet.getBoolean(5));
 			users.add(user);
 		}
 		statement.close();
@@ -81,6 +77,7 @@ public class UserAPI {
 			user.setName(resultSet.getString(2));
 			user.setIdCompany(resultSet.getInt(3));
 			user.setPassword(resultSet.getString(4));
+			user.setManager(resultSet.getBoolean(5));
 		}
 		statement.close();
 		Database.disconnect();
@@ -104,19 +101,20 @@ public class UserAPI {
 			user.setName(resultSet.getString(2));
 			user.setIdCompany(resultSet.getInt(3));
 			user.setPassword(resultSet.getString(4));
+			user.setManager(resultSet.getBoolean(5));
 		}
 		statement.close();
 		Database.disconnect();
 		return user;
 	}
-	
+
 	private void databaseExecution(String query) { // remove static
 		try {
 			Database.connect();
 			statement = (Statement) Database.connection.createStatement();
 			statement.executeUpdate(query);
 		} catch (SQLException e) {
-			System.err.println("Error during the query execution: " + e.getErrorCode());
+			System.err.println("Error during the query execution: " + e.getMessage());
 		} finally {
 			try {
 				statement.close();
@@ -126,47 +124,5 @@ public class UserAPI {
 			}
 		}
 	}
-	private static void databaseInsertion(String query) {  // remove static
-		Statement statement = null;		
-		
-		try {
-			Database.connect();
-			statement = (Statement) Database.connection.createStatement();
-			statement.executeUpdate(query);
-		}
-		catch(SQLException e){
-			System.err.println("Error during the query execution: " + e.getErrorCode());
-		}			
-		finally{
-			try {
-				Database.disconnect();		
-				statement.close();
-			}catch(Exception e){
-				System.err.println("Error closing the connection: " + e.getMessage());
-			}	
-		}		
-	}
-	private ResultSet databaseSelection(String query) {		
-		Statement statement = null;	
-		ResultSet resultSet = null;
-		
-		try {
-			Database.connect();
-			statement = (Statement) Database.connection.createStatement();
-			resultSet = statement.executeQuery(query);
-		}
-		catch(SQLException e){
-			System.err.println("Error during the query execution: " + e.getErrorCode());
-		}			
-		finally{
-			try {		
-				Database.disconnect();		
-				statement.close();
-			}catch(Exception e){
-				System.err.println("Error closing the connection: " + e.getMessage());
-			}	
-		}	
-		return resultSet;
-	}
-}
 
+}

@@ -5,6 +5,8 @@ public class User {
 	private String name;
 	private int idCompany;
 	private String password;
+	private boolean manager;
+	
 	
 	public int getId() {
 		return id;
@@ -21,6 +23,10 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public boolean IsManager(){return manager;}
+
+	public void setManager(boolean manager){this.manager = manager;}
 	
 	public int getIdCompany() {
 		return idCompany;
@@ -41,12 +47,13 @@ public class User {
 	public User() {
 		
 	}
-	public User(int id, String name, int idCompany, String password) {
+	public User(int id, String name, int idCompany, String password, boolean manager) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.idCompany = idCompany;
 		this.password = password;
+		this.manager = manager;
 	}
 	
 	
