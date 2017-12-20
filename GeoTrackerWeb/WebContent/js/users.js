@@ -16,12 +16,16 @@ function edit(no) {
 	document.getElementById("btnEdit"+no).style.display="none";
 	document.getElementById("btnSave"+no).style.display="block";
 	
+	
+	
 	 var codeRow=document.getElementById("codeRow"+no);
 	 var nameRow=document.getElementById("nameRow"+no);
 	 var passwordRow=document.getElementById("passRow"+no);
 	 var companyRow=document.getElementById("companyRow"+no);
 	 var boolRow=document.getElementById("boolRow"+no);
 	 var boolvalue = document.getElementById("bool"+no).checked;
+	 
+	 document.getElementById("boolRow"+no).disabled;
 	 
 	 var code_data=codeRow.innerHTML;
 	 
@@ -76,6 +80,8 @@ function save(no) {
 		document.getElementById("company").value = document.getElementById("companySave").value;
 		document.getElementById("pass").value = document.getElementById("passSave").value;
 		document.getElementById("bool").checked = document.getElementById("boolSave").checked;
+		
+		document.getElementById("boolRow"+no).disabled = true;
 		
 		document.getElementById("action").value = "save";
 		document.getElementById("form_data").submit();
