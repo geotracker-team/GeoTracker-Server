@@ -10,6 +10,10 @@
 <%@ page import="java.util.ArrayList, java.util.Iterator, java.util.HashMap" %>
 <%@ page import="api.*, models.*" %>
 <%
+	if((session == null) || (session.getAttribute("username") == null)) {			
+	    	response.sendRedirect("login.jsp");
+	}	
+
 	Project project;
 	Company company;
 	
