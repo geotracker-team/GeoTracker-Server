@@ -45,13 +45,15 @@
 						<td class="screen_title">Projects</td>
 					</tr>
 				</table> 
+				
 				<form action="ProjectsServlet" method="post" id="form_data" name="form_data">
-				<input type="hidden" id="action" name="action" value="" /> 
 				<br/>
-				<table width="75%" cellpadding="0" cellspacing="2" align="center"
-					class="data_table" id="data_table">
+				<input type="hidden" id="action" name="action" value="" /> 
+				<br>
+				<table cellpadding="5" cellspacing="2" align="center"
+					class="data_table" id="data_table"  width="75%">
 					<tr>
-						<th width="20%" class="data_header">Code</th>
+						<th class="data_header">Code</th>
 						<th class="data_header">Name</th>
 						<th class="data_header">Company</th>
 						<th width="8%" class="data_header">&nbsp;</th>
@@ -68,14 +70,14 @@
 
 					<tr class="data_row">
 						<td class="data_col_code" id="codeRow<%=project.getId() %>"><%=project.getId() %></td>
-						<td class="data_col_text" id="nameRow<%=project.getId() %>"><%=project.getName() %></td>
-						<td class="data_col_text" id="companyRow<%=project.getId() %>">
+						<td class="data_col_code" id="nameRow<%=project.getId() %>"><%=project.getName() %></td>
+						<td class="data_col_code" id="companyRow<%=project.getId() %>">
 							<input type="hidden" id="company<%=project.getId() %>" value="<%=project.getIdCompany() %>" />						
 <%							if (company != null) 
 								out.println(company.getName()); 
 %>
 						</td>
-						<td align="center" nowrap="nowrap">
+						<td align="center" nowrap="nowrap" class="data_col_code">
 							<a  onClick="return edit(<%=project.getId() %>);" id="btnEdit<%=project.getId() %>" name="btnEdit<%=project.getId() %>"
 								onMouseOut="MM_swapImgRestore()" style="display: block; cursor: pointer;"
 								onMouseOver="MM_swapImage('btnEditImg<%=project.getId() %>','','img/edit24_up.gif',1)">
@@ -86,7 +88,7 @@
 								onMouseOver="MM_swapImage('btnSaveImg<%=project.getId() %>','','img/save24_up.gif',1)">
 								<img src="img/save24.gif" alt="Save user data" name="btnSaveImg<%=project.getId() %>" id="btnSaveImg<%=project.getId() %>" width="24" height="24" border="0"></a>
 						</td>
-						<td align="center">
+						<td align="center" class="data_col_code">
 							<a  onClick="return deleteProject(<%=project.getId() %>);" 
 								onMouseOut="MM_swapImgRestore()" style="cursor: pointer;"
 								onMouseOver="MM_swapImage('btnDelete<%=project.getId() %>','','img/delete24_up.gif',1)">
@@ -117,8 +119,9 @@
 								onMouseOver="MM_swapImage('btnNew','','img/new24_up.gif',1)"><img src="img/new24.gif" alt="New user" name="btnNew" width="24" height="24" border="0"></a></td>
 					  <td align="center">&nbsp;</td>
 				  </tr>
+				
 			  </table>
-				</form>
+				  </form>
 			</td>
 		</tr>
 	</table>
