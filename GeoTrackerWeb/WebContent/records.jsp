@@ -5,14 +5,22 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <script language="javascript" type="text/javascript" src="js/search.js"></script>
+<script language="javascript" type="text/javascript" src="js/record.js"></script>
 <link href="css/geotracker.css" rel="stylesheet" type="text/css">
 <title>Records</title>
 </head>
 <%@ page import="java.util.ArrayList, java.util.Iterator" %>
 <%@ page import="api.RecordAPI, models.Record" %>
+<%@ page import="api.ExtraFieldAPI, models.ExtraField" %>
 <%
 	Record record;
 	ArrayList<Record> records;
+	
+	ExtraField efield;
+	ArrayList<ExtraField> efields;
+	
+	ExtraFieldAPI api2 = new ExtraFieldAPI();
+	efields = null;
 	
 	RecordAPI api = new RecordAPI();
 	records = api.getAllRecords();
@@ -57,12 +65,14 @@
 <th class="data_header">User</th>
 <th class="data_header">Latitude</th>
 <th class="data_header">Longitude</th>
+<th width="8%" class="data_header">&nbsp;</th>
 </tr>
 <%
 			if (records != null) {
 				Iterator<Record> iterator = records.iterator();
 				while (iterator.hasNext()) {
 					record = (Record) iterator.next();
+					efields = api2.getExtraFieldsById(record.getId());
 %>
 
 <tr id="data_row">
@@ -73,7 +83,7 @@
 <td class="data_col_code"><%=record.getIdUser() %></td>
 <td class="data_col_code"><%=record.getLatitude() %></td>
 <td class="data_col_code"><%=record.getLongitude() %></td>
-
+<td class="data_col_code"><button id="efield<%=record.getId() %>" onclick="show(<%=record.getId() %>)">Extra<%=record.getId() %></button>
 </tr>
 
 <% 		} 
@@ -85,5 +95,34 @@
 			</td>
 		</tr>
 	</table>
+	
+	
+	<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h3>Extra field</h3>
+    </div>
+    <div class="modal-body">
+    <table>
+    <tr>
+    <th class="data_header">ID</th>	
+	<th class="data_header">Type</th>
+	<th class="data_header">Value</th>
+	
+	<tr>
+	<tr id="data_row">
+	<td class="data_col_code"></td>
+	<td class="data_col_code"></td>
+	<td class="data_col_code"></td>
+	</tr>
+    </table>
+    </div>
+  </div>
+
+</div>
+
 </body>
 </html>
