@@ -52,12 +52,14 @@
 				
 <table align="center" cellspacing="2" cellpadding="5" id="data_table" class="data_table" width="75%">
 <tr>
+
 <th class="data_header">Code</th>
 <th class="data_header">Name</th>
 <th class="data_header">Password</th>
 <th class="data_header">Company</th>
 <th width="8%" class="data_header">&nbsp;</th>
 <th width="8%" class="data_header">&nbsp;</th>
+          
 </tr>
 <%
 			if (users != null) {
@@ -71,6 +73,14 @@
 						<td class="data_col_code" id="codeRow<%=user.getId() %>"><%=user.getId() %></td>
 						<td class="data_col_code" id="nameRow<%=user.getId() %>"><%=user.getName() %></td>
 						<td class="data_col_code" id="passRow<%=user.getId() %>"><%=user.getPassword() %></td>
+						<td class="data_col_code" id="boolRow<%=user.getId() %>">
+						<% if(user.IsManager() == true){ %>
+						<input type="checkbox" id="bool<%=user.getId() %>"  checked disabled>
+						<% } %>
+						<% if(user.IsManager() == false) { %>
+						<input type="checkbox" id="bool<%=user.getId() %>"  disabled>
+						<% } %>
+						</td>
 						<td class="data_col_code" id="companyRow<%=user.getId() %>">
 							<input type="hidden" id="company<%=user.getId() %>" value="<%=user.getIdCompany() %>" />						
 <%							if (company != null) 
@@ -109,6 +119,9 @@
 						</td>
 						<td class="data_col_code" id="passwordAddRow">
 							<input type="text" id="pass" name="pass" value="" size="50" maxlength="255" />
+						</td>
+						<td class="data_col_code" id="boolAddRow">
+							<input type="checkbox" id="bool" name="bool" />
 						</td>
 						<td class="data_col_code" id="companyAddRow">
 							<select id="company" name="company" style="width:200px">
