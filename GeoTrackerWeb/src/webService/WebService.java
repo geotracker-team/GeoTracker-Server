@@ -12,10 +12,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import models.JResponse;
 import models.Project;
 import models.Record;
 import api.API;
 import api.ProjectsAPI;
+import jdk.nashorn.internal.runtime.JSONFunctions;
+
 
 @RequestScoped
 @Path("")
@@ -24,16 +27,18 @@ import api.ProjectsAPI;
 public class WebService {
 
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/login/{name}/{pass}")
-	public boolean login (@PathParam("name") String name, @PathParam("pass") String pass){
+	public JResponse login (@PathParam("name") String name, @PathParam("pass") String pass) throws SQLException{
 		System.out.println("login");
-		return true;
+		API api = new API();		
+		return api.authenticate(name, pass);
 	}	
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/projects/{name}/{pass}")
-	public Project[] getProjectsOfUser(@PathParam("name") String name, @PathParam("pass") String pass) throws SQLException	
+	public JResponse getProjectsOfUser(@PathParam("name") String name, @PathParam("pass") String pass) throws SQLException	
 	{
 		/*ProjectsAPI api = new ProjectsAPI();
 		ArrayList<Project> projects = api.getAllProjectsByUser(name);	*/
@@ -53,7 +58,7 @@ public class WebService {
 		project2.setIdCompany(2);
 		projects.add(project2);		
 		
-		return projects.toArray(new Project[0]);
+		return new JResponse(true, projects);
 	}	
 	
 	@GET

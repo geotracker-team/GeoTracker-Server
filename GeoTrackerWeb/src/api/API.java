@@ -98,6 +98,31 @@ public class API {
 		return user;
 	}
 	
+	public JResponse authenticate(String userName, String password) throws SQLException {
+		
+		ResultSet resultSet= databaseSelection("SELECT password FROM users WHERE name = \'" + userName + "\'");		
+		boolean isOk = false;
+		String message = "";
+		
+		if(resultSet.next()) {
+			if(password.equals(resultSet.getString(1))) {
+				isOk = true;
+				message = "User correctly authenticated";
+				
+			}
+			else {
+				message = "User incorrectly authenticated";
+			}
+		}
+		else {
+			message = "The user " + userName + " does not exist";
+		}	
+		
+		System.out.println(message);		
+		closeConnection();
+		return new JResponse(isOk, message); 
+	}
+	
 	public Assigned getAssignedById(int id) throws SQLException {
 		ResultSet resultSet= databaseSelection("SELECT * FROM assigned WHERE id = " + id);
 		Assigned assigned = new Assigned();

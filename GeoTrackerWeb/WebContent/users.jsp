@@ -53,12 +53,11 @@
 <table align="center" cellspacing="2" cellpadding="5" id="data_table" class="data_table" width="75%">
 <tr>
 
-<th class="data_header">Code</th>
-<th class="data_header">Name</th>
-<th class="data_header">Password</th>
-<th class="data_header">Company</th>
-<th width="8%" class="data_header">&nbsp;</th>
-<th width="8%" class="data_header">&nbsp;</th>
+<th>Code</th>
+<th>Name</th>
+<th>Password</th>
+<th>Type (isManager)</th>
+<th>Company</th>
           
 </tr>
 <%
