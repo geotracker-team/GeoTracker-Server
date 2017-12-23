@@ -43,22 +43,30 @@ public class API {
 	}
 		
 	public JResponse createRecord(String userName, String password, Record record) throws SQLException {
-		JResponse jr = authenticate(userName, password);
-		if(jr.isOk()) {
-			databaseInsertion("INSERT INTO register (description, date, id_project, id_user, latitiude, longitude) VALUES (\'" + record.getDescription() + "\', \'" + record.getDate()
-			+ "\', " + record.getIdProject() + ", " + record.getIdUser() + ", " + record.getLatitude() + "," + record.getLongitude() + ");");
-			jr.setExtra("Record \'" + record.getDescription() + "\' stored succefully");
-		}
-		return jr;
+		String query = "INSERT INTO register (description, date, id_project, id_user, latitiude, longitude) VALUES (\'" + record.getDescription() + "\',"
+				+ " \'" + record.getDate() + "\', " + record.getIdProject() + ", " + record.getIdUser() + ", " + record.getLatitude() + "," + record.getLongitude() + ");";
+		return alterRecord(userName, password, query);
 		/*Register register = new Register();
 		register.setDescription("register test");
 		register.setIdProject(1);
 		register.setIdUser(1);
 		register.setLatitude(0.0);
-		register.setLatitude(0.0);*/
-		
-
-		
+		register.setLatitude(0.0);*/		
+	}
+	
+	public JResponse editRecord(String userName, String password, Record record, int idRecord) throws SQLException {
+		String query = "UPDATE register SET description = \'" + record.getDescription() + "\' , date = \'" + record.getDate() + "\', id_project = " + record.getIdProject() 
+			+ ", id_user = " + record.getIdUser() + ", latitiude = " + record.getLatitude() + ", longitude = " + record.getLongitude() + " WHERE id = " + idRecord;
+		return alterRecord(userName, password, query);
+	}
+	
+	public JResponse alterRecord(String userName, String password, String query) throws SQLException {
+		JResponse jr = authenticate(userName, password);
+		if(jr.isOk()) {
+			JResponse jrafter = databaseInsertion(query);
+			return jrafter;			
+		}
+		return jr; 
 	}
 	
 	public void createExtraField() {
@@ -315,25 +323,32 @@ public class API {
 	}
 	
 	// PRIVATE METHODS	
-	private static void databaseInsertion(String query) {  // remove static
+	private JResponse databaseInsertion(String query) {  // remove static
 		Statement statement = null;		
+		boolean isOk = false;
+		String extra = "";
 		
 		try {
 			Database.connect();
 			statement = (Statement) Database.connection.createStatement();
 			statement.executeUpdate(query);
+			isOk = true;
+			extra = "Update done correctly";
 		}
 		catch(SQLException e){
-			System.err.println("Error during the query execution: " + e.getMessage());
-		}			
+			extra = "Error during the query execution: " + e.getMessage();
+		}
 		finally{
 			try {
 				Database.disconnect();		
 				statement.close();
 			}catch(Exception e){
-				System.err.println("Error closing the connection: " + e.getMessage());
+				extra = "Error closing the connection: " + e.getMessage();
 			}	
-		}		
+		}	
+		System.err.println(extra);		
+		
+		return new JResponse(isOk, extra);
 	}
 	
 	private ResultSet databaseSelection(String query) {			

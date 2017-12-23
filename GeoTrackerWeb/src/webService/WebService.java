@@ -1,6 +1,6 @@
 package webService;
 
-import java.io.InputStream;
+//import java.io.InputStream;
 import java.sql.SQLException;
 
 import javax.enterprise.context.RequestScoped;
@@ -105,31 +105,39 @@ public class WebService {
 	//@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/addRecord/{name}/{pass}")
 	public JResponse addRecord(@PathParam("name") String name, @PathParam("pass") String pass) throws SQLException	
-	{
-		
+	{		
 		Record record = new Record();
 		//record.setId(resultSet.getInt(1));
 		record.setDescription("rest service description test");
 		record.setDate("17/12/2017");
 		record.setIdUser(1);
 		record.setIdProject(1);
-		record.setLatitude(1);
-		record.setLongitude(1);	
+		record.setLatitude(2);
+		record.setLongitude(2);	
 		
 		System.out.println("addRecord");			
 		API api = new API();
 		return api.createRecord(name, pass, record);
-
 	}	
 	
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	//@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/editRecord/{name}/{pass}/{idRecord}")
-	public boolean editRecord(@PathParam("name") String name, @PathParam("pass") String pass,
-			@PathParam("idRecord") int idRecord, InputStream incomingData){
+	public JResponse editRecord(@PathParam("name") String name, @PathParam("pass") String pass, @PathParam("idRecord") int idRecord) throws SQLException{
 		System.out.println("editRecord");
-		return true;
+		
+		Record record = new Record();
+		//record.setId(resultSet.getInt(1));
+		record.setDescription("rest service description test edited");
+		record.setDate("17/12/2087");
+		record.setIdUser(1);
+		record.setIdProject(1);
+		record.setLatitude(3);
+		record.setLongitude(4);	
+		
+		API api = new API();
+		return api.editRecord(name, pass, record, idRecord);
 	}
 	
 
