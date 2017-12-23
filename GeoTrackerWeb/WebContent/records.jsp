@@ -20,7 +20,7 @@
 	ArrayList<ExtraField> efields;
 	
 	ExtraFieldAPI api2 = new ExtraFieldAPI();
-	efields = null;
+	efields = api2.getExtraFieldsById(2);
 	
 	RecordAPI api = new RecordAPI();
 	records = api.getAllRecords();
@@ -72,7 +72,7 @@
 				Iterator<Record> iterator = records.iterator();
 				while (iterator.hasNext()) {
 					record = (Record) iterator.next();
-					efields = api2.getExtraFieldsById(record.getId());
+					
 %>
 
 <tr id="data_row">
@@ -96,7 +96,6 @@
 		</tr>
 	</table>
 	
-	
 	<div id="myModal" class="modal">
 
   <!-- Modal content -->
@@ -111,13 +110,22 @@
     <th class="data_header">ID</th>	
 	<th class="data_header">Type</th>
 	<th class="data_header">Value</th>
-	
 	<tr>
+	<%
+			if (efields != null) {
+				Iterator<ExtraField> iterator = efields.iterator();
+				while (iterator.hasNext()) {
+					efield = (ExtraField) iterator.next();
+					
+	%>
 	<tr id="data_row">
-	<td class="data_col_code"></td>
-	<td class="data_col_code"></td>
-	<td class="data_col_code"></td>
+	<td class="data_col_code"><%=efield.getIdRegister() %></td>
+	<td class="data_col_code"><%=efield.getType() %></td>
+	<td class="data_col_code"><%=efield.getValue() %></td>
 	</tr>
+	<% 		} 
+	}
+	%>
     </table>
     </div>
   </div>
