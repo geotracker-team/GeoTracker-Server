@@ -43,21 +43,21 @@ public class API {
 	}
 		
 	public JResponse createRecord(String userName, String password, Record record) throws SQLException {
-		String query = "INSERT INTO register (description, date, id_project, id_user, latitiude, longitude) VALUES (\'" + record.getDescription() + "\',"
-				+ " \'" + record.getDate() + "\', " + record.getIdProject() + ", " + record.getIdUser() + ", " + record.getLatitude() + "," + record.getLongitude() + ");";
-		return alterRecord(userName, password, query);
-		/*Register register = new Register();
-		register.setDescription("register test");
-		register.setIdProject(1);
-		register.setIdUser(1);
-		register.setLatitude(0.0);
-		register.setLatitude(0.0);*/		
+		if(record.getDate() != null) {
+			String query = "INSERT INTO register (description, date, id_project, id_user, latitiude, longitude) VALUES (\'" + record.getDescription() + "\',"
+					+ " \'" + record.getDate() + "\', " + record.getIdProject() + ", " + record.getIdUser() + ", " + record.getLatitude() + "," + record.getLongitude() + ");";
+			return alterRecord(userName, password, query);
+		}
+		return new JResponse(false, "Creation rejected, null record recieved");	
 	}
 	
 	public JResponse editRecord(String userName, String password, Record record, int idRecord) throws SQLException {
-		String query = "UPDATE register SET description = \'" + record.getDescription() + "\' , date = \'" + record.getDate() + "\', id_project = " + record.getIdProject() 
-			+ ", id_user = " + record.getIdUser() + ", latitiude = " + record.getLatitude() + ", longitude = " + record.getLongitude() + " WHERE id = " + idRecord;
-		return alterRecord(userName, password, query);
+		if(record.getDate() != null) {
+			String query = "UPDATE register SET description = \'" + record.getDescription() + "\' , date = \'" + record.getDate() + "\', id_project = " + record.getIdProject() 
+				+ ", id_user = " + record.getIdUser() + ", latitiude = " + record.getLatitude() + ", longitude = " + record.getLongitude() + " WHERE id = " + idRecord;
+			return alterRecord(userName, password, query);
+		}
+		return new JResponse(false, "Update rejected, null record recieved");
 	}
 	
 	public JResponse alterRecord(String userName, String password, String query) throws SQLException {
