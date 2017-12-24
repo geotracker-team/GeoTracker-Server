@@ -97,7 +97,7 @@ public class LoginServlet extends HttpServlet {
 		}
 		//
 		session = request.getSession(true);
-		session.setAttribute("name", strUser);
+		session.setAttribute("username", strUser);
 		session.setAttribute("password", strPass);
 		session.setAttribute("resul",strResul);
 		session.setAttribute("error",strMessage);

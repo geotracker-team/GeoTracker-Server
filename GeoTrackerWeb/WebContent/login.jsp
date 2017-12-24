@@ -82,7 +82,7 @@ span.psw {
     <img src="img/logo.png" alt="logo" class="logo">
   </div>
 <%
-	String strLogin = (String) session.getAttribute("name");
+	String strLogin = (String) session.getAttribute("username");
 	if(strLogin == null)
 		strLogin = "";
 	String strPassword = (String) session.getAttribute("password");
