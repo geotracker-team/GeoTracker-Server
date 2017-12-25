@@ -259,7 +259,7 @@ public class API {
 			Assigned assignation = new Assigned();
 			assignation.setId(resultSet.getInt(1));
 			assignation.setIdProject(resultSet.getInt(2));
-			assignation.setIdUser(3);
+			assignation.setIdUser(resultSet.getInt(3));
 			assignations.add(assignation);
 			System.out.println(assignation.getId() + " " + assignation.getIdProject() + " " + assignation.getIdUser());
 		}

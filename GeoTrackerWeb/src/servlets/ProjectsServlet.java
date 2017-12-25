@@ -88,15 +88,15 @@ public class ProjectsServlet extends HttpServlet {
 		switch (strAction) {
 		case "add":
 			projectsAPI.createProject(project);
-			System.out.println("add: " + project.toString());
+			System.out.println("Projects: add: " + project.getName());
 			break;
 		case "save":
 			projectsAPI.updateProject(project);
-			System.out.println("save:" + project.toString());			
+			System.out.println("Projects: save:" + project.getName());			
 			break;
 		case "delete":
 			projectsAPI.deleteProject(project);
-			System.out.println("delete: " + project.toString());
+			System.out.println("Projects: delete: " + project.getName());
 			break;
 		}
 		
