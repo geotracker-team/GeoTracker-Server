@@ -6,33 +6,37 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link href="css/geotracker.css" rel="stylesheet" type="text/css" />
 	<script language="javascript" type="text/javascript" src="js/mm_functions.js" ></script>
-	<script language="javascript" type="text/javascript" src="js/project_detail.js" ></script>
+	<script language="javascript" type="text/javascript" src="js/assigned.js" ></script>
 </head>
 
 <%@ page import="java.util.ArrayList, java.util.Iterator, java.util.HashMap" %>
 <%@ page import="api.*, models.*" %>
 <%	
-	int idProject;
+	int projectId;
 	String projectName;
 	Assigned assigned;
 	User user;
 	String userName;
 	
+	//	Get parameter id of the project
 	if (request.getParameter("id") != null)
-		idProject = Integer.parseInt(request.getParameter("id"));
+		projectId = Integer.parseInt(request.getParameter("id"));
 	else 
-		idProject = 0;
+		projectId = 0;
 	
+	//	Get name of project
 	ProjectsAPI projectsApi = new ProjectsAPI();
-	Project project = projectsApi.getProjectById(idProject);
+	Project project = projectsApi.getProjectById(projectId);
 	if (project != null)
 		projectName = project.getName();
 	else
 		projectName = "";
 	
+	//	Get list of users assignets
 	API api = new API();
-	ArrayList<Assigned> assigneds = api.getAllAssignationsByProject(idProject);
+	ArrayList<Assigned> assigneds = api.getAllAssignationsByProject(projectId);
 	
+	//	Get users to obtain userName
 	UserAPI userAPI = new UserAPI();
 	ArrayList<User> users = userAPI.getAllUsers();
 	
@@ -41,7 +45,7 @@
 		usersMap.put(new Integer(u.getId()), u);
 	}	
 %>
-<body onload="MM_preloadImages('img/edit24_up.gif','img/save24_up.gif','img/delete24_up.gif')">
+<body onload="MM_preloadImages('img/save24_up.gif','img/delete24_up.gif')">
 	<table id="title_frame" width="100%" border="0" align="center"
 		cellpadding="2" cellspacing="1">
 		<tr>
@@ -57,7 +61,10 @@
 					<table width="100%" cellpadding="10" cellspacing="0" class="search_frame">
 						<tr >
 							<td width="10%" nowrap="nowrap" class="seach_label">Project name:</td>
-							<td nowrap="nowrap" class="search_input"><b><%=projectName %></b></td>
+							<td nowrap="nowrap" class="search_input">
+								<input type="hidden" id="project" name="project" value="<%=projectId %>"/>
+								<b><%=projectName %></b>
+							</td>
 					  </tr>
 				  </table>
 				</td>
@@ -85,7 +92,7 @@
 						<td><%=userName %></td>
 						<td>
 							<a  id="btnDelete<%=assigned.getId() %>" name="btnDelete<%=assigned.getId() %>"
-								onclick="return deleteProject(<%=assigned.getId() %>);" 
+								onclick="return deleteUser(<%=assigned.getId() %>);" 
 								onmouseout="MM_swapImgRestore()" style="cursor: pointer;"
 								onmouseover="MM_swapImage('btnDeleteImg<%=assigned.getId() %>','','img/delete24_up.gif',1)">
 								<img src="img/delete24.gif" alt="Delete user" id="btnDeleteImg<%=assigned.getId() %>"
@@ -96,13 +103,16 @@
 	}
 	%>					
 					<tr>
-					  <td>
-						  <select id="newUser" name="newUser" style="width:200px">
+					  <td><input id="code" name="code" type="hidden" />
+						  <select id="user" name="user" style="width:200px">
 	                        <option value="0" selected="selected">(Select user)</option>
+<%							  	for (User u: users) {	%>
+							  		<option value="<%=u.getId() %>"><%=u.getName() %></option>
+<%							  } %>	         	                        
 	                      </select>
                       </td>
 					  <td>
-					  		<a onclick="return add();" style="cursor: pointer;"
+					  		<a 	onclick="return add();" style="cursor: pointer;"
 								onmouseout="MM_swapImgRestore()" 
 								onmouseover="MM_swapImage('btnNew','','img/new24_up.gif',1)">
 								<img src="img/new24.gif" alt="New user" name="btnNew" width="24" height="24" border="0" /></a>
