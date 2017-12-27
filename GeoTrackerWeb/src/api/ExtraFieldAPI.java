@@ -42,30 +42,30 @@ public class ExtraFieldAPI {
 		return extrafields;		
 	}
 	
-	public ArrayList<ExtraField> getExtraFieldsById(int id) throws SQLException {
-		ArrayList<ExtraField> efields = new ArrayList<>();
+	public ArrayList<ExtraField> getAllExtraFieldsById(int id) throws SQLException {
+	ArrayList<ExtraField> extrafields = new ArrayList<>();
+		
 		Statement statement = null;	
 		ResultSet resultSet = null;
-		
-		
-		String query = "SELECT * FROM extrafield WHERE id_register = '" + id + "'";
-		
+		//ResultSet resultSet= databaseSelection("SELECT * FROM register");
+		String query = "SELECT * FROM extrafield WHERE id_register = " + id;
+		//ResultSet resultSet= databaseSelection("SELECT * FROM users WHERE id = " + id);
 		Database.connect();
 		statement = (Statement) Database.connection.createStatement();
 		resultSet = statement.executeQuery(query);
 		
 		
-		if (resultSet.next()) {
+		while(resultSet.next()) {
 			ExtraField eField = new ExtraField();
 			eField.setId(resultSet.getInt(1));
 			eField.setIdRegister(resultSet.getInt(2));
 			eField.setType(resultSet.getString(3));
-			eField.setValue(resultSet.getString(4));
-			efields.add(eField);
+			eField.setValue(resultSet.getString(4));		
+			extrafields.add(eField);
 		}
 		statement.close();
 		Database.disconnect();
-		return efields;
+		return extrafields;		
 	}
 	
 	// PRIVATE METHODS	

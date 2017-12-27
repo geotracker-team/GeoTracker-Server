@@ -20,7 +20,8 @@
 	ArrayList<ExtraField> efields;
 	
 	ExtraFieldAPI api2 = new ExtraFieldAPI();
-	efields = api2.getExtraFieldsById(2);
+	efields = null;
+	//efields = api2.getAllExtraFieldsById(2);
 	
 	RecordAPI api = new RecordAPI();
 	records = api.getAllRecords();
@@ -83,7 +84,7 @@
 <td class="data_col_code"><%=record.getIdUser() %></td>
 <td class="data_col_code"><%=record.getLatitude() %></td>
 <td class="data_col_code"><%=record.getLongitude() %></td>
-<td class="data_col_code"><button id="efield<%=record.getId() %>" onclick="show(<%=record.getId() %>)">Extra<%=record.getId() %></button>
+<td class="data_col_code"><button id="efield<%=record.getId() %>" onclick="openDetails(<%=record.getId() %>)">Extra<%=record.getId() %></button>
 </tr>
 
 <% 		} 
@@ -95,42 +96,6 @@
 			</td>
 		</tr>
 	</table>
-	
-	<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <div class="modal-header">
-      <span class="close">&times;</span>
-      <h3>Extra field</h3>
-    </div>
-    <div class="modal-body">
-    <table>
-    <tr>
-    <th class="data_header">ID</th>	
-	<th class="data_header">Type</th>
-	<th class="data_header">Value</th>
-	<tr>
-	<%
-			if (efields != null) {
-				Iterator<ExtraField> iterator = efields.iterator();
-				while (iterator.hasNext()) {
-					efield = (ExtraField) iterator.next();
-					
-	%>
-	<tr id="data_row">
-	<td class="data_col_code"><%=efield.getIdRegister() %></td>
-	<td class="data_col_code"><%=efield.getType() %></td>
-	<td class="data_col_code"><%=efield.getValue() %></td>
-	</tr>
-	<% 		} 
-	}
-	%>
-    </table>
-    </div>
-  </div>
-
-</div>
 
 </body>
 </html>
