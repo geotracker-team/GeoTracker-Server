@@ -13,6 +13,11 @@
 <%@ page import="api.RecordAPI, models.Record" %>
 <%@ page import="api.ExtraFieldAPI, models.ExtraField" %>
 <%
+
+	if((session == null) || (session.getAttribute("username") == null)) {			
+		response.sendRedirect("login.jsp");
+	}
+
 	Record record;
 	ArrayList<Record> records;
 	
