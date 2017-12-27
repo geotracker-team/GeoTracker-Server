@@ -42,29 +42,47 @@ public class API {
 		databaseInsertion("INSERT INTO assigned (id_project, id_user) VALUES (" + assignation.getIdProject() + ", " + assignation.getIdUser() + ");");
 	}
 		
-	public JResponse createRecord(String userName, String password, Record record) throws SQLException {
-		if(record.getDate() != null) {
-			String query = "INSERT INTO register (description, date, id_project, id_user, latitiude, longitude) VALUES (\'" + record.getDescription() + "\',"
-					+ " \'" + record.getDate() + "\', " + record.getIdProject() + ", " + record.getIdUser() + ", " + record.getLatitude() + "," + record.getLongitude() + ");";
-			return alterRecord(userName, password, query);
-		}
-		return new JResponse(false, "Creation rejected, null record recieved");	
-	}
-	
-	public JResponse editRecord(String userName, String password, Record record, int idRecord) throws SQLException {
-		if(record.getDate() != null) {
-			String query = "UPDATE register SET description = \'" + record.getDescription() + "\' , date = \'" + record.getDate() + "\', id_project = " + record.getIdProject() 
-				+ ", id_user = " + record.getIdUser() + ", latitiude = " + record.getLatitude() + ", longitude = " + record.getLongitude() + " WHERE id = " + idRecord;
-			return alterRecord(userName, password, query);
-		}
-		return new JResponse(false, "Update rejected, null record recieved");
-	}
-	
-	public JResponse alterRecord(String userName, String password, String query) throws SQLException {
+	public JResponse createRecord(String userName, String password, RecordResponse rr) throws SQLException {
+		JResponse response;
 		JResponse jr = authenticate(userName, password);
 		if(jr.isOk()) {
-			JResponse jrafter = databaseInsertion(query);
-			return jrafter;			
+			if(rr.getRecord().getDate() != null) {
+				String query = "INSERT INTO register (description, date, id_project, id_user, latitiude, longitude) VALUES (\'" + rr.getRecord().getDescription() + "\',"
+						+ " \'" + rr.getRecord().getDate() + "\', " + rr.getRecord().getIdProject() + ", " + rr.getRecord().getIdUser() + ", " + rr.getRecord().getLatitude()
+						+ "," + rr.getRecord().getLongitude() + ");";
+				
+				response = databaseInsertion(query);
+				if (response.isOk()) {
+					for(ExtraField extra : rr.getOtherFields()) {
+					response = databaseInsertion("INSERT INTO extrafield (id_register, type, value) VALUES (" + rr.getRecord().getId() 
+							+ ", \'" + extra.getType() + "\', \'" + extra.getValue() + "\');");
+					}
+				return response;
+				}				
+			}
+			return new JResponse(false, "Creation rejected, null record recieved");			
+		}
+		return jr; 
+	}
+	
+	public JResponse editRecord(String userName, String password, RecordResponse rr, int idRecord) throws SQLException {
+		JResponse response;
+		JResponse jr = authenticate(userName, password);
+		if(jr.isOk()) {
+			if(rr.getRecord().getDate() != null) {
+				String query = "UPDATE register SET description = \'" + rr.getRecord().getDescription() + "\' , date = \'" + rr.getRecord().getDate() 
+						+ "\', id_project = " + rr.getRecord().getIdProject() + ", id_user = " + rr.getRecord().getIdUser() + ", latitiude = " 
+						+ rr.getRecord().getLatitude() + ", longitude = " + rr.getRecord().getLongitude() + " WHERE id = " + idRecord;
+				
+				response = databaseInsertion(query);
+				if (response.isOk()) {
+					for(ExtraField extra : rr.getOtherFields()) {
+					response = databaseInsertion("UPDATE extrafield SET type = \'" + extra.getType() + "\', value = \'" + extra.getValue() + "\' WHERE id = " + extra.getId());
+					}
+				return response;
+				}				
+			}
+			return new JResponse(false, "Creation rejected, null record recieved");			
 		}
 		return jr; 
 	}
@@ -121,8 +139,7 @@ public class API {
 		if(resultSet.next()) {
 			if(password.equals(resultSet.getString(1))) {
 				isOk = true;
-				message = "User correctly authenticated";
-				
+				message = "User correctly authenticated";				
 			}
 			else {
 				message = "User incorrectly authenticated";
@@ -281,7 +298,13 @@ public class API {
 		if(jr.isOk()) {
 			ArrayList<Record> records = getAllRegisters("SELECT * FROM register WHERE id_project = " + idProject);
 			if(records.isEmpty()) jr.setExtra("The project " + idProject + " does not exist");
-			else jr.setExtra(records);
+			else {				
+				ArrayList<RecordResponse> responses = new ArrayList<>();
+				for(Record r : records) {
+					responses.add(new RecordResponse(r, getAllExtByRegister(r.getId())));
+				}				
+				jr.setExtra(responses);				
+			}
 		}
 		return jr;
 	}
@@ -333,7 +356,7 @@ public class API {
 			statement = (Statement) Database.connection.createStatement();
 			statement.executeUpdate(query);
 			isOk = true;
-			extra = "Update done correctly";
+			extra = "Insertion/update done correctly";
 		}
 		catch(SQLException e){
 			extra = "Error during the query execution: " + e.getMessage();

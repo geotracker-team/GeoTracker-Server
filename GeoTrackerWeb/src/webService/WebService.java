@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import models.JResponse;
 import models.Record;
+import models.RecordResponse;
 import api.API;
 
 @RequestScoped
@@ -52,7 +53,7 @@ public class WebService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/addRecord/{name}/{pass}")
-	public JResponse addRecord(@PathParam("name") String name, @PathParam("pass") String pass, Record record) throws SQLException	
+	public JResponse addRecord(@PathParam("name") String name, @PathParam("pass") String pass, RecordResponse record) throws SQLException	
 	{		
 		return api.createRecord(name, pass, record);
 	}	
@@ -61,7 +62,7 @@ public class WebService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/editRecord/{name}/{pass}/{idRecord}")
-	public JResponse editRecord(@PathParam("name") String name, @PathParam("pass") String pass, @PathParam("idRecord") int idRecord, Record record) throws SQLException
+	public JResponse editRecord(@PathParam("name") String name, @PathParam("pass") String pass, @PathParam("idRecord") int idRecord, RecordResponse record) throws SQLException
 	{
 		return api.editRecord(name, pass, record, idRecord);
 	}
