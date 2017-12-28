@@ -46,8 +46,7 @@ public class CompanyCreation extends HttpServlet {
 			ArrayList<User> ul = api.getAllUsers(1);
 			ArrayList<Assigned> al = api.getAllAssignationsByProject(1);
 			ArrayList<Assigned> al2 = api.getAllAssignationsByUser(1);
-			ArrayList<Register> rl = api.getAllRegistersByProject(1);
-			ArrayList<Register> rl2 = api.getAllRegistersByUser(1);
+			ArrayList<Record> rl2 = api.getAllRegistersByUser(1);
 			ArrayList<ExtraField> el = api.getAllExtByRegister(1);
 			
 			

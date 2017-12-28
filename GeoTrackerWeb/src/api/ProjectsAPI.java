@@ -42,6 +42,22 @@ public class ProjectsAPI {
 	public ArrayList<Project> getAllProjects() throws SQLException {
 		return getAllProjects(0);
 	}
+	
+	public ArrayList<Project> getAllProjectsByUser(String name) throws SQLException{
+		ArrayList<Project> projects = new ArrayList<>();
+		ResultSet resultSet= databaseSelection("SELECT p.* FROM project p, assigned a, users u"
+				+ " WHERE u.name = \'" + name + "\' AND u.id = a.id_user AND a.id_project = p.id");
+		while(resultSet.next()) {
+			Project project = new Project();
+			project.setId(resultSet.getInt(1));
+			project.setName(resultSet.getString(2));
+			project.setIdCompany(resultSet.getInt(3));
+			projects.add(project);
+			System.out.println(project.getId() + " " + project.getName() + " " + project.getIdCompany());
+		}
+		closeConnection();
+		return projects;		
+	}
 
 	public ArrayList<Project> getAllProjects(int idCompany) throws SQLException {
 		ArrayList<Project> projects = new ArrayList<>();

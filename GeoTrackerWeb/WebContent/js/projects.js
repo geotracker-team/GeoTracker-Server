@@ -77,6 +77,12 @@ function deleteProject(id) {
 	}
 }
 
+function openDetails(id) {
+	url = "assigned.jsp?id=" + id;
+	window.open(url, "ProjectDetails", "height=400,width=600,location=no,menubar=no,status=no");	
+}
+
+
 function validateAdd() {
 
 //	alert("validateAdd");
