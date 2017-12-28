@@ -15,8 +15,8 @@ public class UserAPI {
 	public void createUser(User user) {
 		String query;
 
-		query = "INSERT INTO users (name,id_company,password)\r\n" + 
-				"VALUES ('" + user.getName() + "', " +  user.getIdCompany() + ", '" + user.getPassword() + "');";
+		query = "INSERT INTO users (name,id_company,password,is_manager)\r\n" + 
+				"VALUES ('" + user.getName() + "', " +  user.getIdCompany() + ", '" + user.getPassword() + "' ," + user.IsManager() + ");";
 		databaseExecution(query);
 	}
 	
@@ -25,8 +25,8 @@ public class UserAPI {
 		
 		query = "UPDATE users " +
 		        " SET name = '" + user.getName()  +
-		          "', id_company = " + user.getIdCompany()  + ", password = '" + user.getPassword() +
-		        "' WHERE id = " + user.getId();
+		          "', id_company = " + user.getIdCompany()  + ", password = '" + user.getPassword() + "', is_manager = " + user.IsManager() + 
+		        " WHERE id = " + user.getId();
 		databaseExecution(query);
 	}
 	public void deleteUser(User user) {
@@ -52,6 +52,7 @@ public class UserAPI {
 			user.setName(resultSet.getString(2));
 			user.setIdCompany(resultSet.getInt(3));
 			user.setPassword(resultSet.getString(4));
+			user.setManager(resultSet.getBoolean(5));
 			users.add(user);
 		}
 		statement.close();
@@ -76,6 +77,7 @@ public class UserAPI {
 			user.setName(resultSet.getString(2));
 			user.setIdCompany(resultSet.getInt(3));
 			user.setPassword(resultSet.getString(4));
+			user.setManager(resultSet.getBoolean(5));
 		}
 		statement.close();
 		Database.disconnect();
@@ -99,6 +101,7 @@ public class UserAPI {
 			user.setName(resultSet.getString(2));
 			user.setIdCompany(resultSet.getInt(3));
 			user.setPassword(resultSet.getString(4));
+			user.setManager(resultSet.getBoolean(5));
 		}
 		statement.close();
 		Database.disconnect();
