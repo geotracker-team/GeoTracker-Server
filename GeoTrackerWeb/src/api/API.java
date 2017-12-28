@@ -39,9 +39,18 @@ public class API {
 		Assigned assignation = new Assigned();
 		assignation.setIdProject(1);
 		assignation.setIdUser(1);
-		databaseInsertion("INSERT INTO assigned (id_project, id_user) VALUES (" + assignation.getIdProject() + ", " + assignation.getIdUser() + ");");
+		createAssignation(assignation);
 	}
-		
+
+	public void createAssignation(Assigned assignation) {
+		databaseInsertion("INSERT INTO assigned (id_project, id_user) "
+				+ " VALUES (" + assignation.getIdProject() + ", " + assignation.getIdUser() + ");");
+	}
+	
+	public void deleteAssignation(Assigned assignation) {
+		databaseInsertion("DELETE FROM assigned WHERE id = " + assignation.getId());
+	}
+	
 	public JResponse createRecord(String userName, String password, Record record) throws SQLException {
 		if(record.getDate() != null) {
 			String query = "INSERT INTO register (description, date, id_project, id_user, latitiude, longitude) VALUES (\'" + record.getDescription() + "\',"
@@ -259,7 +268,7 @@ public class API {
 			Assigned assignation = new Assigned();
 			assignation.setId(resultSet.getInt(1));
 			assignation.setIdProject(resultSet.getInt(2));
-			assignation.setIdUser(3);
+			assignation.setIdUser(resultSet.getInt(3));
 			assignations.add(assignation);
 			System.out.println(assignation.getId() + " " + assignation.getIdProject() + " " + assignation.getIdUser());
 		}
