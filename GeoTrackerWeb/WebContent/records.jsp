@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <script language="javascript" type="text/javascript" src="js/search.js"></script>
+<script language="javascript" type="text/javascript" src="js/record.js"></script>
 <link href="css/geotracker.css" rel="stylesheet" type="text/css">
 <title>Records</title>
 </head>
@@ -15,6 +16,13 @@
 	User user;
 	Project project;
 	ArrayList<Record> records;
+	
+	ExtraField efield;
+	ArrayList<ExtraField> efields;
+	
+	ExtraFieldAPI api2 = new ExtraFieldAPI();
+	efields = null;
+	//efields = api2.getAllExtraFieldsById(2);
 	
 	RecordAPI api = new RecordAPI();
 	records = api.getAllRecords();
@@ -60,7 +68,7 @@
 				<br/>
 				<input type="hidden" id="action" name="action"/> 
 				
-				  <img src="img/blanc.gif" width="10" height="10">
+				Â  <img src="img/blanc.gif" width="10" height="10">
 				
 				 <label for="search" id="txt">Type for search(userid or projectid)</label>  <input type="text" name="search" placeholder="search" id="search" onkeyup="Search()"><br><br><br>
 				
@@ -74,6 +82,7 @@
 <th class="data_header">User</th>
 <th class="data_header">Latitude</th>
 <th class="data_header">Longitude</th>
+<th width="8%" class="data_header">&nbsp;</th>
 </tr>
 <%
 			if (records != null) {
@@ -104,7 +113,7 @@
 %>
 <td class="data_col_code"><%=record.getLatitude() %></td>
 <td class="data_col_code"><%=record.getLongitude() %></td>
-
+<td class="data_col_code"><button id="efield<%=record.getId() %>" onclick="openDetails(<%=record.getId() %>)">Extra<%=record.getId() %></button>
 </tr>
 
 <% 		} 
@@ -116,5 +125,6 @@
 			</td>
 		</tr>
 	</table>
+
 </body>
 </html>
