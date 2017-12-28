@@ -12,6 +12,12 @@
 <%@ page import="java.util.ArrayList, java.util.Iterator, java.util.HashMap" %>
 <%@ page import="api.*, models.*" %>
 <%
+
+
+  if((session == null) || (session.getAttribute("username") == null)) {			
+		response.sendRedirect("login.jsp");
+	}
+  
 	Record record;
 	User user;
 	Project project;
@@ -73,8 +79,9 @@
 				 <label for="search" id="txt">Type for search(userid or projectid)</label>  <input type="text" name="search" placeholder="search" id="search" onkeyup="Search()"><br><br><br>
 				
 
-<table align="center" cellspacing="2" cellpadding="5" id="data_table" class="data_table" width="75%">
+<table align='center' cellspacing=2 cellpadding=5 id="data_table" border=1 class="data_table">
 <tr>
+
 <th class="data_header">ID</th>	
 <th class="data_header">Description</th>
 <th class="data_header">Date</th>
@@ -83,6 +90,7 @@
 <th class="data_header">Latitude</th>
 <th class="data_header">Longitude</th>
 <th width="8%" class="data_header">&nbsp;</th>
+
 </tr>
 <%
 			if (records != null) {
@@ -96,7 +104,7 @@
 					
 %>
 
-<tr id="data_row">
+<tr id="row">
 <td class="data_col_code"><%=record.getId() %></td>
 <td class="data_col_code"><%=record.getDescription() %></td>
 <td class="data_col_code"><%=record.getDate() %></td>
