@@ -42,22 +42,30 @@ public class API {
 		databaseInsertion("INSERT INTO assigned (id_project, id_user) VALUES (" + assignation.getIdProject() + ", " + assignation.getIdUser() + ");");
 	}
 		
-	public JResponse createRecord(String userName, String password, RecordResponse rr) throws SQLException {
+	public JResponse createRecord(String userName, String password, Record record) throws SQLException {
 		JResponse response;
 		JResponse jr = authenticate(userName, password);
 		if(jr.isOk()) {
-			if(rr.getRecord().getDate() != null) {
-				String query = "INSERT INTO register (description, date, id_project, id_user, latitiude, longitude) VALUES (\'" + rr.getRecord().getDescription() + "\',"
-						+ " \'" + rr.getRecord().getDate() + "\', " + rr.getRecord().getIdProject() + ", " + rr.getRecord().getIdUser() + ", " + rr.getRecord().getLatitude()
-						+ "," + rr.getRecord().getLongitude() + ");";
+			if(record.getDate() != null) {
+				String query = "INSERT INTO register (description, date, id_project, id_user, latitiude, longitude) VALUES (\'" + record.getDescription() + "\',"
+						+ " \'" + record.getDate() + "\', " + record.getIdProject() + ", " + record.getIdUser() + ", " +record.getLatitude()
+						+ "," + record.getLongitude() + ");";
 				
 				response = databaseInsertion(query);
+				ResultSet resultSet = databaseSelection("SELECT MAX(id) FROM register");
+				resultSet.next();
+				int idRegister = resultSet.getInt(1);
+				response.setExtra(idRegister);
 				if (response.isOk()) {
-					for(ExtraField extra : rr.getOtherFields()) {
-					response = databaseInsertion("INSERT INTO extrafield (id_register, type, value) VALUES (" + rr.getRecord().getId() 
-							+ ", \'" + extra.getType() + "\', \'" + extra.getValue() + "\');");
-					}
-				return response;
+					JResponse responseExtra;
+					for(ExtraField extra : record.getOtherFields()) {
+						responseExtra = databaseInsertion("INSERT INTO extrafield (id_register, type, value, title) VALUES (" + idRegister 
+							+ ", \'" + extra.getType() + "\', \'" + extra.getValue() + "\', \'" + extra.getTitle() + "\')");
+						if(!response.isOk()) {
+							return responseExtra;
+						}
+					}					
+					return response;
 				}				
 			}
 			return new JResponse(false, "Creation rejected, null record recieved");			
@@ -65,19 +73,20 @@ public class API {
 		return jr; 
 	}
 	
-	public JResponse editRecord(String userName, String password, RecordResponse rr, int idRecord) throws SQLException {
+	public JResponse editRecord(String userName, String password, Record record, int idRecord) throws SQLException {
 		JResponse response;
 		JResponse jr = authenticate(userName, password);
 		if(jr.isOk()) {
-			if(rr.getRecord().getDate() != null) {
-				String query = "UPDATE register SET description = \'" + rr.getRecord().getDescription() + "\' , date = \'" + rr.getRecord().getDate() 
-						+ "\', id_project = " + rr.getRecord().getIdProject() + ", id_user = " + rr.getRecord().getIdUser() + ", latitiude = " 
-						+ rr.getRecord().getLatitude() + ", longitude = " + rr.getRecord().getLongitude() + " WHERE id = " + idRecord;
+			if(record.getDate() != null) {
+				String query = "UPDATE register SET description = \'" + record.getDescription() + "\' , date = \'" + record.getDate() 
+						+ "\', id_project = " + record.getIdProject() + ", id_user = " + record.getIdUser() + ", latitiude = " 
+						+ record.getLatitude() + ", longitude = " + record.getLongitude() + " WHERE id = " + idRecord;
 				
 				response = databaseInsertion(query);
 				if (response.isOk()) {
-					for(ExtraField extra : rr.getOtherFields()) {
-					response = databaseInsertion("UPDATE extrafield SET type = \'" + extra.getType() + "\', value = \'" + extra.getValue() + "\' WHERE id = " + extra.getId());
+					for(ExtraField extra : record.getOtherFields()) {
+						response = databaseInsertion("UPDATE extrafield SET type = \'" + extra.getType() + "\', value = \'" +
+								extra.getValue() + "\' WHERE title = \'" + extra.getTitle() +"\' AND id_register = " + idRecord);
 					}
 				return response;
 				}				
@@ -296,17 +305,42 @@ public class API {
 	public JResponse getAllRegistersByProject(String userName, String password, int idProject) throws SQLException{
 		JResponse jr = authenticate(userName, password);
 		if(jr.isOk()) {
-			ArrayList<Record> records = getAllRegisters("SELECT * FROM register WHERE id_project = " + idProject);
+			String query = "SELECT r.*, u.name, p.name FROM register r, project p, users u WHERE id_project = "
+					+ idProject +	" AND u.id = r.id_project AND p.id = r.id_project";
+			ArrayList<RecordResponse> records = getAllRegistersResponse(query);
 			if(records.isEmpty()) jr.setExtra("The project " + idProject + " does not exist");
 			else {				
 				ArrayList<RecordResponse> responses = new ArrayList<>();
-				for(Record r : records) {
-					responses.add(new RecordResponse(r, getAllExtByRegister(r.getId())));
+				for(RecordResponse r : records) {
+					r.setOtherFields(getAllExtByRegister(r.getId()));
+					responses.add(r);
 				}				
 				jr.setExtra(responses);				
 			}
 		}
 		return jr;
+	}
+	
+	private ArrayList<RecordResponse> getAllRegistersResponse(String query) throws SQLException{
+		ArrayList<RecordResponse> records = new ArrayList<>();
+		ResultSet resultSet= databaseSelection(query);
+		while(resultSet.next()) {
+			RecordResponse record = new RecordResponse();
+			record.setId(resultSet.getInt(1));
+			record.setDescription(resultSet.getString(2));
+			record.setDate(resultSet.getString(3));		
+			record.setIdProject(resultSet.getInt(4));
+			record.setIdUser(resultSet.getInt(5));
+			record.setLatitude(resultSet.getFloat(6));
+			record.setLongitude(resultSet.getFloat(7));	
+			record.setUserName(resultSet.getString(8));
+			record.setProjectName(resultSet.getString(9));
+			records.add(record);
+			System.out.println(record.getId() + " " + record.getDescription() + " " +  record.getIdProject() + " " + record.getIdUser() + " " +
+					record.getLatitude() + " " + record.getLongitude() + " " + record.getDate());
+		}
+		closeConnection();
+		return records;		
 	}
 	
 	private ArrayList<Record> getAllRegisters(String query) throws SQLException{
@@ -322,8 +356,6 @@ public class API {
 			record.setLatitude(resultSet.getFloat(6));
 			record.setLongitude(resultSet.getFloat(7));	
 			records.add(record);
-			System.out.println(record.getId() + " " + record.getDescription() + " " +  record.getIdProject() + " " + record.getIdUser() + " " +
-					record.getLatitude() + " " + record.getLongitude() + " " + record.getDate());
 		}
 		closeConnection();
 		return records;		
@@ -338,6 +370,7 @@ public class API {
 			extra.setIdRegister(resultSet.getInt(2));
 			extra.setType(resultSet.getString(3));
 			extra.setValue(resultSet.getString(4));
+			extra.setTitle(resultSet.getString(5));
 			extras.add(extra);
 			System.out.println(extra.getId() + " " + extra.getIdRegister() + " " + extra.getType() + " " + extra.getValue());
 		}
