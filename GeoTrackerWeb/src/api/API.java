@@ -46,13 +46,15 @@ public class API {
 		JResponse response;
 		JResponse jr = authenticate(userName, password);
 		if(jr.isOk()) {
-			if(record.getDate() != null) {
+			if(record != null) {
+				ResultSet resultSet = databaseSelection("SELECT id FROM users WHERE name = \'" + userName + "\';");
+				resultSet.next();
 				String query = "INSERT INTO register (description, date, id_project, id_user, latitiude, longitude) VALUES (\'" + record.getDescription() + "\',"
-						+ " \'" + record.getDate() + "\', " + record.getIdProject() + ", " + record.getIdUser() + ", " +record.getLatitude()
+						+ " \'" + record.getDate() + "\', " + record.getIdProject() + ", " + resultSet.getInt(1) + ", " +record.getLatitude()
 						+ "," + record.getLongitude() + ");";
 				
 				response = databaseInsertion(query);
-				ResultSet resultSet = databaseSelection("SELECT MAX(id) FROM register");
+				resultSet = databaseSelection("SELECT MAX(id) FROM register");
 				resultSet.next();
 				int idRegister = resultSet.getInt(1);
 				response.setExtra(idRegister);
@@ -77,9 +79,11 @@ public class API {
 		JResponse response;
 		JResponse jr = authenticate(userName, password);
 		if(jr.isOk()) {
-			if(record.getDate() != null) {
+			if(record != null) {
+				ResultSet resultSet = databaseSelection("SELECT id FROM users WHERE name = \'" + userName + "\';");
+				resultSet.next();
 				String query = "UPDATE register SET description = \'" + record.getDescription() + "\' , date = \'" + record.getDate() 
-						+ "\', id_project = " + record.getIdProject() + ", id_user = " + record.getIdUser() + ", latitiude = " 
+						+ "\', id_project = " + record.getIdProject() + ", id_user = " + resultSet.getInt(1) + ", latitiude = " 
 						+ record.getLatitude() + ", longitude = " + record.getLongitude() + " WHERE id = " + idRecord;
 				
 				response = databaseInsertion(query);
@@ -91,7 +95,7 @@ public class API {
 				return response;
 				}				
 			}
-			return new JResponse(false, "Creation rejected, null record recieved");			
+			return new JResponse(false, "Edition rejected, null record recieved");			
 		}
 		return jr; 
 	}
