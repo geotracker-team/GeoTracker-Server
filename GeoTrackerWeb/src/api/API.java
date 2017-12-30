@@ -318,18 +318,28 @@ public class API {
 	public JResponse getAllRegistersByProject(String userName, String password, int idProject) throws SQLException{
 		JResponse jr = authenticate(userName, password);
 		if(jr.isOk()) {
-			String query = "SELECT r.*, u.name, p.name FROM register r, project p, users u WHERE id_project = "
-					+ idProject +	" AND u.id = r.id_project AND p.id = r.id_project";
-			ArrayList<RecordResponse> records = getAllRegistersResponse(query);
-			if(records.isEmpty()) jr.setExtra("The project " + idProject + " does not exist");
-			else {				
-				ArrayList<RecordResponse> responses = new ArrayList<>();
-				for(RecordResponse r : records) {
-					r.setOtherFields(getAllExtByRegister(r.getId()));
-					responses.add(r);
-				}				
-				jr.setExtra(responses);				
+			ResultSet rs = databaseSelection("SELECT COUNT(1) FROM project WHERE id = "+ idProject); 
+			rs.next();
+			if(rs.getBoolean(1)) {
+				System.out.println("project exists " + rs.getInt(1));
+			
+				String query = "SELECT r.*, u.name, p.name FROM register r, project p, users u WHERE r.id_project = "
+						+ idProject +	" AND u.id = r.id_user AND p.id = r.id_project";
+				ArrayList<RecordResponse> records = getAllRegistersResponse(query);
+				if(records.isEmpty()) jr.setExtra("The project " + idProject + " does not have any record yet");
+				else {				
+					ArrayList<RecordResponse> responses = new ArrayList<>();
+					for(RecordResponse r : records) {
+						r.setOtherFields(getAllExtByRegister(r.getId()));
+						responses.add(r);
+					}				
+					jr.setExtra(responses);				
+				}
 			}
+			else {
+				jr.setExtra("The project " + idProject + " does not exist");
+				jr.setOk(false);
+			}			
 		}
 		return jr;
 	}
