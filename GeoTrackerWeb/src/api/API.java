@@ -76,26 +76,32 @@ public class API {
 	}
 	
 	public JResponse editRecord(String userName, String password, Record record, int idRecord) throws SQLException {
-		JResponse response;
+		JResponse response = null;
 		JResponse jr = authenticate(userName, password);
 		if(jr.isOk()) {
-			if(record != null) {
-				ResultSet resultSet = databaseSelection("SELECT id FROM users WHERE name = \'" + userName + "\';");
-				resultSet.next();
-				String query = "UPDATE register SET description = \'" + record.getDescription() + "\' , date = \'" + record.getDate() 
-						+ "\', id_project = " + record.getIdProject() + ", id_user = " + resultSet.getInt(1) + ", latitiude = " 
-						+ record.getLatitude() + ", longitude = " + record.getLongitude() + " WHERE id = " + idRecord;
-				
-				response = databaseInsertion(query);
-				if (response.isOk()) {
-					for(ExtraField extra : record.getOtherFields()) {
-						response = databaseInsertion("UPDATE extrafield SET type = \'" + extra.getType() + "\', value = \'" +
-								extra.getValue() + "\' WHERE title = \'" + extra.getTitle() +"\' AND id_register = " + idRecord);
+			ResultSet rs = databaseSelection("SELECT COUNT(1) FROM register WHERE id = "+ idRecord); 
+			rs.next();
+			if(rs.getBoolean(1)) {
+				if(record != null) {
+					ResultSet resultSet = databaseSelection("SELECT id FROM users WHERE name = \'" + userName + "\';");
+					resultSet.next();
+					String query = "UPDATE register SET description = \'" + record.getDescription() + "\' , date = \'" + record.getDate() 
+							+ "\', id_project = " + record.getIdProject() + ", id_user = " + resultSet.getInt(1) + ", latitiude = " 
+							+ record.getLatitude() + ", longitude = " + record.getLongitude() + " WHERE id = " + idRecord;
+					
+					response = databaseInsertion(query);
+					if (response.isOk()) {
+						for(ExtraField extra : record.getOtherFields()) {
+							response = databaseInsertion("UPDATE extrafield SET type = \'" + extra.getType() + "\', value = \'" +
+									extra.getValue() + "\' WHERE title = \'" + extra.getTitle() +"\' AND id_register = " + idRecord);
+							if(!response.isOk()) break;
+						}						
 					}
-				return response;
-				}				
+					return response;
+				}
+				return new JResponse(false, "Edition rejected, null record recieved");				
 			}
-			return new JResponse(false, "Edition rejected, null record recieved");			
+			return new JResponse(false, "The project does not exist");
 		}
 		return jr; 
 	}
@@ -312,12 +318,17 @@ public class API {
 			ResultSet rs = databaseSelection("SELECT COUNT(1) FROM project WHERE id = "+ idProject); 
 			rs.next();
 			if(rs.getBoolean(1)) {
-				System.out.println("project exists " + rs.getInt(1));
+				rs.close();
 			
 				String query = "SELECT r.*, u.name, p.name FROM register r, project p, users u WHERE r.id_project = "
 						+ idProject +	" AND u.id = r.id_user AND p.id = r.id_project";
 				ArrayList<RecordResponse> records = getAllRegistersResponse(query);
-				if(records.isEmpty()) jr.setExtra("The project " + idProject + " does not have any record yet");
+				if(records.isEmpty()) {
+					rs = databaseSelection("SELECT name FROM project WHERE id = "+ idProject + " GROUP BY name"); 
+					rs.next();
+					jr.setExtra("The project " + rs.getString(1) + " does not have any record yet");
+					jr.setOk(false);
+				}
 				else {				
 					ArrayList<RecordResponse> responses = new ArrayList<>();
 					for(RecordResponse r : records) {
@@ -328,7 +339,7 @@ public class API {
 				}
 			}
 			else {
-				jr.setExtra("The project " + idProject + " does not exist");
+				jr.setExtra("This project does not exist");
 				jr.setOk(false);
 			}			
 		}
