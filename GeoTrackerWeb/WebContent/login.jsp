@@ -18,10 +18,9 @@ input[type=text], input[type=password] {
     border: 1px solid #ccc;
     box-sizing: border-box;
 }
-p {background-color:blue;color:white;width:40%;margin:auto}
-
+p {background-color:#3366CC;color:white;width:40%;margin:auto}
 button {
-    background-color: blue;
+    background-color: #3366CC;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
@@ -29,36 +28,29 @@ button {
     cursor: pointer;
     width: 100%;
 }
-
 button:hover {
     opacity: 0.8;
 }
-
 .cancelbtn {
     width: auto;
     padding: 10px 18px;
     background-color: #f44336;
 }
-
 .imgcontainer {
     text-align: center;
     margin: 24px 0 12px 0;
 }
-
 img.logo {
     width: 20%;
     border-radius: 50%;
 }
-
 .container {
     padding: 16px;
 }
-
 span.psw {
     float: right;
     padding-top: 16px;
 }
-
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
     span.psw {
@@ -69,7 +61,6 @@ span.psw {
        width: 100%;
     }
 }
-
 </style>
 </head>
 <body>
@@ -82,13 +73,12 @@ span.psw {
     <img src="img/logo.png" alt="logo" class="logo">
   </div>
 <%
-	String strLogin = (String) session.getAttribute("name");
+	String strLogin = (String) session.getAttribute("username");
 	if(strLogin == null)
 		strLogin = "";
 	String strPassword = (String) session.getAttribute("password");
 	if(strPassword == null)
 		strPassword = "";
-
 %>
   <div class="container">
     <label><b>Username</b></label>
@@ -98,13 +88,8 @@ span.psw {
     <input type="password" placeholder="Enter Password" name="psw" value="<%=strPassword %>" required>
         
     <button type="submit">Login</button>
-    <input type="checkbox" checked="checked"> Remember me
   </div>
 
-  <div class="container" style="background-color:#f1f1f1">
-    <button type="button" class="cancelbtn">Cancel</button>
-    <span class="psw">Forgot <a href="#">password?</a></span>
-  </div>
   
   <%
   	String err = (String) session.getAttribute("error");
