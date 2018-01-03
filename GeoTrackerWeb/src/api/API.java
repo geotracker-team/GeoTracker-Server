@@ -160,14 +160,12 @@ public class API {
 	}
 	
 	public JResponse authenticate(String userName, String password) throws SQLException {		
-		ResultSet resultSet= databaseSelection("SELECT password FROM users WHERE name = \'" + userName + "\'");		
-		boolean isOk = false;
+		ResultSet resultSet= databaseSelection("SELECT password, is_manager FROM users WHERE name = \'" + userName + "\'");		
 		String message = "";
-		
 		if(resultSet.next()) {
+			System.out.println(resultSet.getString(1) + " " + resultSet.getBoolean(2));
 			if(password.equals(resultSet.getString(1))) {
-				isOk = true;
-				message = "User correctly authenticated";				
+				return new JResponse(true, resultSet.getBoolean(2));				
 			}
 			else {
 				message = "User incorrectly authenticated";
@@ -176,10 +174,8 @@ public class API {
 		else {
 			message = "The user " + userName + " does not exist";
 		}	
-		
-		System.out.println(message);		
 		closeConnection();
-		return new JResponse(isOk, message); 
+		return new JResponse(false, message); 
 	}
 	
 	public Assigned getAssignedById(int id) throws SQLException {
