@@ -19,7 +19,7 @@
          </tr>
          <tr> 
           <td class="menu" align="center">
-		  	<a href="#" onMouseOut="MM_swapImgRestore()" 
+		  	<a href="login.jsp" onMouseOut="MM_swapImgRestore()" 
 			   onmouseover="MM_swapImage('btnExit','','img/exit_up.gif',1)">
 			   <img src="img/exit.gif" alt="Exit" name="btnExit" width="32" height="32" border="0" id="btnExit" /></a>
 		  </td>
