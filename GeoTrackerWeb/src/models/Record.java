@@ -1,14 +1,16 @@
 package models;
 
+import java.util.ArrayList;
+
 public class Record {
 	private int id;
 	private String description;
 	private String date;
-	private int idUser;
-	private int idProject;
+	private int userId;
+	private int projectId;
 	private float latitude;
 	private float longitude;
-	
+	private ArrayList<ExtraField> otherFields;
 	
 	public int getId() {
 		return id;
@@ -29,16 +31,16 @@ public class Record {
 		this.date = date;
 	}
 	public int getIdUser() {
-		return idUser;
+		return userId;
 	}
 	public void setIdUser(int idUser) {
-		this.idUser = idUser;
+		this.userId = idUser;
 	}
 	public int getIdProject() {
-		return idProject;
+		return projectId;
 	}
 	public void setIdProject(int idProject) {
-		this.idProject = idProject;
+		this.projectId = idProject;
 	}
 	public float getLatitude() {
 		return latitude;
@@ -61,10 +63,16 @@ public class Record {
 		this.id = id;
 		this.description = description;
 		this.date = date;
-		this.idUser = idUser;
-		this.idProject = idProject;
+		this.projectId = idUser;
+		this.projectId = idProject;
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+	public ArrayList<ExtraField> getOtherFields() {
+		return otherFields;
+	}
+	public void setOtherFields(ArrayList<ExtraField> otherFields) {
+		this.otherFields = otherFields;
 	}
 	
 	

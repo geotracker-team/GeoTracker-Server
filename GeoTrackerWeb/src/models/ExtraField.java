@@ -5,6 +5,7 @@ public class ExtraField {
 	private int idRegister;
 	private String type;
 	private String value;
+	private String title;
 	
 	public int getId() {
 		return id;
@@ -36,6 +37,14 @@ public class ExtraField {
 	
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
 }

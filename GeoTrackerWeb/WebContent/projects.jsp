@@ -10,6 +10,10 @@
 <%@ page import="java.util.ArrayList, java.util.Iterator, java.util.HashMap" %>
 <%@ page import="api.*, models.*" %>
 <%
+	if((session == null) || (session.getAttribute("username") == null)) {			
+	    	response.sendRedirect("login.jsp");
+	}	
+
 	Project project;
 	Company company;
 	
@@ -24,7 +28,7 @@
 		companysMap.put(new Integer(c.getId()), c);
 	}	
 %>
-<body leftmargin="0" topmargin="0" onLoad="MM_preloadImages('img/new.gif','img/new_up.gif','img/save.gif','img/save_up.gif','img/delete16_up.gif','img/delete32.gif','img/delete32_up.gif','img/edit24.gif','img/edit24_up.gif','img/edit32.gif','img/edit32_up.gif')">
+<body leftmargin="0" topmargin="0" onLoad="MM_preloadImages('img/new.gif','img/new_up.gif','img/save.gif','img/save_up.gif','img/delete16_up.gif','img/delete32.gif','img/delete32_up.gif','img/edit24.gif','img/edit24_up.gif','img/edit32.gif','img/edit32_up.gif','img/details24.gif','img/details24_up.gif')">
 	<table width="100%" border="0" cellpadding="0" cellspacing="0"
 		bgcolor="#660033">
 		<tr>
@@ -58,6 +62,7 @@
 						<th class="data_header">Company</th>
 						<th width="8%" class="data_header">&nbsp;</th>
 						<th width="8%" class="data_header">&nbsp;</th>
+					    <th width="8%" class="data_header">&nbsp;</th>						
 					</tr>
 <%
 			if (projects != null) {
@@ -94,6 +99,15 @@
 								onMouseOver="MM_swapImage('btnDelete<%=project.getId() %>','','img/delete24_up.gif',1)">
 								<img src="img/delete24.gif" alt="Delete user" id="btnDelete<%=project.getId() %>" name="btnDelete<%=project.getId() %>" width="24" height="24" border="0"></a>
 						</td>
+					    <td align="center">
+							<a id="btnDetails<%=project.getId() %>" name="btnDetails<%=project.getId() %>"
+								onClick="openDetails(<%=project.getId() %>);"
+								onMouseOut="MM_swapImgRestore()" style="cursor: pointer;"
+								onMouseOver="MM_swapImage('btnDetailsImg<%=project.getId() %>','','img/details24_up.gif',1)">
+								<img id="btnDetailsImg<%=project.getId() %>" name="btnDetailsImg<%=project.getId() %>" 
+									src="img/details24.gif" alt="Open details"	width="24" height="24" border="0">
+							</a>
+						</td>						
 					</tr>
 <% 		} 
 	}

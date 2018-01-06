@@ -39,19 +39,80 @@ public class API {
 		Assigned assignation = new Assigned();
 		assignation.setIdProject(1);
 		assignation.setIdUser(1);
-		databaseInsertion("INSERT INTO assigned (id_project, id_user) VALUES (" + assignation.getIdProject() + ", " + assignation.getIdUser() + ");");
+		createAssignation(assignation);
 	}
-		
-	public void createRegister() {
-		Register register = new Register();
-		register.setDescription("register test");
-		register.setIdProject(1);
-		register.setIdUser(1);
-		register.setLatitude(0.0);
-		register.setLatitude(0.0);
 
-		databaseInsertion("INSERT INTO register (description, id_project, id_user, latitude, longitude, date) VALUES (\'" + register.getDescription() + "\', " + register.getIdProject()
-			+ ", " + register.getIdUser() + ", " + register.getLatitude() + ", " + register.getLongitude() + ",\'" + register.getDate() + "\');");
+	public void createAssignation(Assigned assignation) {
+		databaseInsertion("INSERT INTO assigned (id_project, id_user) "
+				+ " VALUES (" + assignation.getIdProject() + ", " + assignation.getIdUser() + ");");
+	}
+	
+	public void deleteAssignation(Assigned assignation) {
+		databaseInsertion("DELETE FROM assigned WHERE id = " + assignation.getId());
+	}
+	
+	public JResponse createRecord(String userName, String password, Record record) throws SQLException {
+		JResponse response;
+		JResponse jr = authenticate(userName, password);
+		if(jr.isOk()) {
+			if(record != null) {
+				ResultSet resultSet = databaseSelection("SELECT id FROM users WHERE name = \'" + userName + "\';");
+				resultSet.next();
+				String query = "INSERT INTO register (description, date, id_project, id_user, latitiude, longitude) VALUES (\'" + record.getDescription() + "\',"
+						+ " \'" + record.getDate() + "\', " + record.getIdProject() + ", " + resultSet.getInt(1) + ", " +record.getLatitude()
+						+ "," + record.getLongitude() + ");";
+				
+				response = databaseInsertion(query);
+				resultSet = databaseSelection("SELECT MAX(id) FROM register");
+				resultSet.next();
+				int idRegister = resultSet.getInt(1);
+				response.setExtra(idRegister);
+				if (response.isOk()) {
+					JResponse responseExtra;
+					for(ExtraField extra : record.getOtherFields()) {
+						responseExtra = databaseInsertion("INSERT INTO extrafield (id_register, type, value, title) VALUES (" + idRegister 
+							+ ", \'" + extra.getType() + "\', \'" + extra.getValue() + "\', \'" + extra.getTitle() + "\')");
+						if(!response.isOk()) {
+							return responseExtra;
+						}
+					}					
+					return response;
+				}				
+			}
+			return new JResponse(false, "Creation rejected, null record recieved");			
+		}
+		return jr; 
+	}
+	
+	public JResponse editRecord(String userName, String password, Record record, int idRecord) throws SQLException {
+		JResponse response = null;
+		JResponse jr = authenticate(userName, password);
+		if(jr.isOk()) {
+			ResultSet rs = databaseSelection("SELECT COUNT(1) FROM register WHERE id = "+ idRecord); 
+			rs.next();
+			if(rs.getBoolean(1)) {
+				if(record != null) {
+					ResultSet resultSet = databaseSelection("SELECT id FROM users WHERE name = \'" + userName + "\';");
+					resultSet.next();
+					String query = "UPDATE register SET description = \'" + record.getDescription() + "\' , date = \'" + record.getDate() 
+							+ "\', id_project = " + record.getIdProject() + ", id_user = " + resultSet.getInt(1) + ", latitiude = " 
+							+ record.getLatitude() + ", longitude = " + record.getLongitude() + " WHERE id = " + idRecord;
+					
+					response = databaseInsertion(query);
+					if (response.isOk()) {
+						for(ExtraField extra : record.getOtherFields()) {
+							response = databaseInsertion("UPDATE extrafield SET type = \'" + extra.getType() + "\', value = \'" +
+									extra.getValue() + "\' WHERE title = \'" + extra.getTitle() +"\' AND id_register = " + idRecord);
+							if(!response.isOk()) break;
+						}						
+					}
+					return response;
+				}
+				return new JResponse(false, "Edition rejected, null record recieved");				
+			}
+			return new JResponse(false, "The project does not exist");
+		}
+		return jr; 
 	}
 	
 	public void createExtraField() {
@@ -96,6 +157,25 @@ public class API {
 		System.out.println(user.getId() + " " + user.getName() + " " + user.getIdCompany());
 		closeConnection();
 		return user;
+	}
+	
+	public JResponse authenticate(String userName, String password) throws SQLException {		
+		ResultSet resultSet= databaseSelection("SELECT password, is_manager FROM users WHERE name = \'" + userName + "\'");		
+		String message = "";
+		if(resultSet.next()) {
+			System.out.println(resultSet.getString(1) + " " + resultSet.getBoolean(2));
+			if(password.equals(resultSet.getString(1))) {
+				return new JResponse(true, resultSet.getBoolean(2));				
+			}
+			else {
+				message = "User incorrectly authenticated";
+			}
+		}
+		else {
+			message = "The user " + userName + " does not exist";
+		}	
+		closeConnection();
+		return new JResponse(false, message); 
 	}
 	
 	public Assigned getAssignedById(int id) throws SQLException {
@@ -170,6 +250,26 @@ public class API {
 		return projects;		
 	}
 	
+	public JResponse getAllProjectsByUser(String userName, String password) throws SQLException{		
+		JResponse jr = authenticate(userName, password);
+		if(jr.isOk()) {
+			ArrayList<Project> projects = new ArrayList<>();
+			ResultSet resultSet= databaseSelection("SELECT p.* FROM project p, assigned a, users u"
+					+ " WHERE u.name = \'" + userName + "\' AND u.id = a.id_user AND a.id_project = p.id");
+			while(resultSet.next()) {
+				Project project = new Project();
+				project.setId(resultSet.getInt(1));
+				project.setName(resultSet.getString(2));
+				project.setIdCompany(resultSet.getInt(3));
+				projects.add(project);
+				System.out.println(project.getId() + " " + project.getName() + " " + project.getIdCompany());
+			}
+			jr.setExtra(projects);
+			closeConnection();
+		}		
+		return jr;		
+	}
+	
 	public ArrayList<User> getAllUsers(int idCompany) throws SQLException{
 		ArrayList<User> users = new ArrayList<>();
 		ResultSet resultSet= databaseSelection("SELECT * FROM users WHERE id_company = " + idCompany);
@@ -200,7 +300,7 @@ public class API {
 			Assigned assignation = new Assigned();
 			assignation.setId(resultSet.getInt(1));
 			assignation.setIdProject(resultSet.getInt(2));
-			assignation.setIdUser(3);
+			assignation.setIdUser(resultSet.getInt(3));
 			assignations.add(assignation);
 			System.out.println(assignation.getId() + " " + assignation.getIdProject() + " " + assignation.getIdUser());
 		}
@@ -208,32 +308,87 @@ public class API {
 		return assignations;		
 	}
 	
-	public ArrayList<Register> getAllRegistersByUser(int idUser) throws SQLException{
+	public ArrayList<Record> getAllRegistersByUser(int idUser) throws SQLException{
 		return getAllRegisters("SELECT * FROM register WHERE id_user = " + idUser);
 	}
 	
-	public ArrayList<Register> getAllRegistersByProject(int idProject) throws SQLException{
-		return getAllRegisters("SELECT * FROM register WHERE id_project = " + idProject);
+	public ArrayList<Record> getAllRegistersByUserName(String name) throws SQLException{
+		return getAllRegisters("SELECT r.* FROM register r, users u WHERE u.name = \'" + name +
+				"\' AND u.id = r.id_user");
 	}
 	
-	private ArrayList<Register> getAllRegisters(String query) throws SQLException{
-		ArrayList<Register> registers = new ArrayList<>();
+	public JResponse getAllRegistersByProject(String userName, String password, int idProject) throws SQLException{
+		JResponse jr = authenticate(userName, password);
+		if(jr.isOk()) {
+			ResultSet rs = databaseSelection("SELECT COUNT(1) FROM project WHERE id = "+ idProject); 
+			rs.next();
+			if(rs.getBoolean(1)) {
+				rs.close();
+			
+				String query = "SELECT r.*, u.name, p.name FROM register r, project p, users u WHERE r.id_project = "
+						+ idProject +	" AND u.id = r.id_user AND p.id = r.id_project";
+				ArrayList<RecordResponse> records = getAllRegistersResponse(query);
+				if(records.isEmpty()) {
+					rs = databaseSelection("SELECT name FROM project WHERE id = "+ idProject + " GROUP BY name"); 
+					rs.next();
+					jr.setExtra("The project " + rs.getString(1) + " does not have any record yet");
+					jr.setOk(false);
+				}
+				else {				
+					ArrayList<RecordResponse> responses = new ArrayList<>();
+					for(RecordResponse r : records) {
+						r.setOtherFields(getAllExtByRegister(r.getId()));
+						responses.add(r);
+					}				
+					jr.setExtra(responses);				
+				}
+			}
+			else {
+				jr.setExtra("This project does not exist");
+				jr.setOk(false);
+			}			
+		}
+		return jr;
+	}
+	
+	private ArrayList<RecordResponse> getAllRegistersResponse(String query) throws SQLException{
+		ArrayList<RecordResponse> records = new ArrayList<>();
 		ResultSet resultSet= databaseSelection(query);
 		while(resultSet.next()) {
-			Register register = new Register();
-			register.setId(resultSet.getInt(1));
-			register.setDescription(resultSet.getString(2));
-			register.setIdProject(resultSet.getInt(3));
-			register.setIdUser(resultSet.getInt(4));
-			register.setLatitude(resultSet.getDouble(5));
-			register.setLongitude(resultSet.getDouble(6));
-			register.setDate(resultSet.getString(7));			
-			registers.add(register);
-			System.out.println(register.getId() + " " + register.getDescription() + " " +  register.getIdProject() + " " + register.getIdUser() + " " +
-					register.getLatitude() + " " + register.getLongitude() + " " + register.getDate());
+			RecordResponse record = new RecordResponse();
+			record.setId(resultSet.getInt(1));
+			record.setDescription(resultSet.getString(2));
+			record.setDate(resultSet.getString(3));		
+			record.setIdProject(resultSet.getInt(4));
+			record.setIdUser(resultSet.getInt(5));
+			record.setLatitude(resultSet.getFloat(6));
+			record.setLongitude(resultSet.getFloat(7));	
+			record.setUserName(resultSet.getString(8));
+			record.setProjectName(resultSet.getString(9));
+			records.add(record);
+			System.out.println(record.getId() + " " + record.getDescription() + " " +  record.getIdProject() + " " + record.getIdUser() + " " +
+					record.getLatitude() + " " + record.getLongitude() + " " + record.getDate());
 		}
 		closeConnection();
-		return registers;		
+		return records;		
+	}
+	
+	private ArrayList<Record> getAllRegisters(String query) throws SQLException{
+		ArrayList<Record> records = new ArrayList<>();
+		ResultSet resultSet= databaseSelection(query);
+		while(resultSet.next()) {
+			Record record = new Record();
+			record.setId(resultSet.getInt(1));
+			record.setDescription(resultSet.getString(2));
+			record.setDate(resultSet.getString(3));		
+			record.setIdProject(resultSet.getInt(4));
+			record.setIdUser(resultSet.getInt(5));
+			record.setLatitude(resultSet.getFloat(6));
+			record.setLongitude(resultSet.getFloat(7));	
+			records.add(record);
+		}
+		closeConnection();
+		return records;		
 	}
 	
 	public ArrayList<ExtraField> getAllExtByRegister(int idRegister) throws SQLException{
@@ -245,6 +400,7 @@ public class API {
 			extra.setIdRegister(resultSet.getInt(2));
 			extra.setType(resultSet.getString(3));
 			extra.setValue(resultSet.getString(4));
+			extra.setTitle(resultSet.getString(5));
 			extras.add(extra);
 			System.out.println(extra.getId() + " " + extra.getIdRegister() + " " + extra.getType() + " " + extra.getValue());
 		}
@@ -253,25 +409,32 @@ public class API {
 	}
 	
 	// PRIVATE METHODS	
-	private static void databaseInsertion(String query) {  // remove static
+	private JResponse databaseInsertion(String query) {  // remove static
 		Statement statement = null;		
+		boolean isOk = false;
+		String extra = "";
 		
 		try {
 			Database.connect();
 			statement = (Statement) Database.connection.createStatement();
 			statement.executeUpdate(query);
+			isOk = true;
+			extra = "Insertion/update done correctly";
 		}
 		catch(SQLException e){
-			System.err.println("Error during the query execution: " + e.getMessage());
-		}			
+			extra = "Error during the query execution: " + e.getMessage();
+		}
 		finally{
 			try {
 				Database.disconnect();		
 				statement.close();
 			}catch(Exception e){
-				System.err.println("Error closing the connection: " + e.getMessage());
+				extra = "Error closing the connection: " + e.getMessage();
 			}	
-		}		
+		}	
+		System.err.println(extra);		
+		
+		return new JResponse(isOk, extra);
 	}
 	
 	private ResultSet databaseSelection(String query) {			
