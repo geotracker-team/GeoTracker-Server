@@ -5,6 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <script language="javascript" type="text/javascript" src="js/search.js"></script>
+<script type='text/javascript' type="text/javascript" src='https://code.jquery.com/jquery-1.11.0.min.js'></script>
+<script type='text/javascript' type="text/javascript" src="js/record_export.js">
+<script language="javascript" type="text/javascript" src="js/record_export.js"></script>
 <link href="css/geotracker.css" rel="stylesheet" type="text/css">
 <title>Records</title>
 </head>
@@ -81,6 +84,10 @@
 	%>
 
 </table>
+
+ <center><a href="#" id ="export" role='button'>Click On This Here Link To Export The Table Data into a CSV File
+                </a></center>
+
 </form>
 			</td>
 		</tr>
