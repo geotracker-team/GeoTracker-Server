@@ -1,4 +1,4 @@
-function add() {
+ function add() {
 //	alert("add");
 	if (validateAdd()) {
 		document.getElementById("action").value = "add";
