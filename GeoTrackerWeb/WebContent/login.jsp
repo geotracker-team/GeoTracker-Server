@@ -40,7 +40,7 @@ button:hover {
     text-align: center;
     margin: 24px 0 12px 0;
 }
-img.logo {
+img.logo0 {
     width: 20%;
     border-radius: 50%;
 }
