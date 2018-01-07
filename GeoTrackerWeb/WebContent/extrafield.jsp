@@ -62,8 +62,8 @@
 				<table align='center' cellspacing="2" cellpadding="5" id="data_table" border="0" class="data_table" width="100%">
 					<tr>
 						<th>Type</th>
+						<th>Title</th>
 						<th>Value</th>
-						<th width="5%"></th>
 					</tr>		
 <%
 			if (efields != null) {
@@ -73,15 +73,10 @@
 %>
 					<tr>
 						<td><%=eField.getType() %></td>
-						<td><%=eField.getValue() %></td>
-						<td>
-							<a  id="btnDelete<%=eField.getId() %>" name="btnDelete<%=eField.getId() %>"
-								onclick="return deleteProject(<%=eField.getId() %>);" 
-								onmouseout="MM_swapImgRestore()" style="cursor: pointer;"
-								onmouseover="MM_swapImage('btnDeleteImg<%=eField.getId() %>','','img/delete24_up.gif',1)">
-								<img src="img/delete24.gif" alt="Delete user" id="btnDeleteImg<%=eField.getId() %>"
-								 name="btnDeleteImg<%=eField.getId() %>" width="24" height="24" border="0" /></a>						
+						<td><% if (eField.getTitle() != null) 
+								out.println(eField.getTitle());	%>						
 						</td>
+						<td><%=eField.getValue() %></td>
 					</tr>
 <% 		} 
 	}

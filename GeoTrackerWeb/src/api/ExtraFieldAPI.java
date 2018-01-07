@@ -31,10 +31,11 @@ public class ExtraFieldAPI {
 		
 		while(resultSet.next()) {
 			ExtraField eField = new ExtraField();
-			eField.setId(resultSet.getInt(1));
-			eField.setIdRegister(resultSet.getInt(2));
-			eField.setType(resultSet.getString(3));
-			eField.setValue(resultSet.getString(4));		
+			eField.setId(resultSet.getInt("id"));
+			eField.setIdRegister(resultSet.getInt("id_register"));
+			eField.setType(resultSet.getString("type"));
+			eField.setValue(resultSet.getString("value"));		
+			eField.setTitle(resultSet.getString("title"));
 			extrafields.add(eField);
 		}
 		statement.close();
@@ -57,10 +58,11 @@ public class ExtraFieldAPI {
 		
 		while(resultSet.next()) {
 			ExtraField eField = new ExtraField();
-			eField.setId(resultSet.getInt(1));
-			eField.setIdRegister(resultSet.getInt(2));
-			eField.setType(resultSet.getString(3));
-			eField.setValue(resultSet.getString(4));		
+			eField.setId(resultSet.getInt("id"));
+			eField.setIdRegister(resultSet.getInt("id_register"));
+			eField.setType(resultSet.getString("type"));
+			eField.setValue(resultSet.getString("value"));		
+			eField.setTitle(resultSet.getString("title"));					
 			extrafields.add(eField);
 		}
 		statement.close();
