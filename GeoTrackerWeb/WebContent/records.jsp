@@ -20,6 +20,8 @@
   
 	Record record;
 	User user;
+	String recordName, userName;
+	Integer recordId, userId;
 	Project project;
 	ArrayList<Record> records;
 	
@@ -74,7 +76,7 @@
 				<br/>
 				<input type="hidden" id="action" name="action"/> 
 				
-				  <img src="img/blanc.gif" width="10" height="10">
+				<img src="img/blanc.gif" width="10" height="10">
 				
 				 <label for="search" id="txt">Type for search(userid or projectid)</label>  <input type="text" name="search" placeholder="search" id="search" onkeyup="Search()"><br><br><br>
 				
@@ -98,9 +100,8 @@
 				
 				while (iterator.hasNext()) {
 					record = (Record) iterator.next();
-					user = (User) users.get(new Integer(record.getIdUser()));
-					project = (Project) projects.get(new Integer(record.getIdProject()));
-					
+					user = (User) usersMap.get(new Integer(record.getIdUser()));
+					project = (Project) projectsMap.get(new Integer(record.getIdProject()));
 					
 %>
 
@@ -111,7 +112,7 @@
 <td class="data_col_code">
 <input type="hidden" value="<%=record.getIdProject() %>" />	
 <%							if (project != null) 
-								out.println(project.getName()); 
+								out.println( project.getName()); 
 %>
 </td>
 <td class="data_col_code">

@@ -27,16 +27,15 @@ public class RecordAPI {
 		statement = (Statement) Database.connection.createStatement();
 		resultSet = statement.executeQuery(query);
 		
-		
 		while(resultSet.next()) {
 			Record record = new Record();
-			record.setId(resultSet.getInt(1));
-			record.setDescription(resultSet.getString(2));
-			record.setDate(resultSet.getString(3));
-			record.setIdUser(resultSet.getInt(4));
-			record.setIdProject(resultSet.getInt(5));
-			record.setLatitude(resultSet.getFloat(6));
-			record.setLongitude(resultSet.getFloat(7));			
+			record.setId(resultSet.getInt("id"));
+			record.setDescription(resultSet.getString("description"));
+			record.setDate(resultSet.getString("date"));
+			record.setIdUser(resultSet.getInt("id_user"));
+			record.setIdProject(resultSet.getInt("id_project"));
+			record.setLatitude(resultSet.getFloat("latitiude"));
+			record.setLongitude(resultSet.getFloat("longitude"));			
 			records.add(record);
 		}
 		statement.close();
@@ -58,13 +57,13 @@ public class RecordAPI {
 		
 		
 		while(resultSet.next()) {
-			record.setId(resultSet.getInt(1));
-			record.setDescription(resultSet.getString(2));
-			record.setDate(resultSet.getString(3));
-			record.setIdUser(resultSet.getInt(4));
-			record.setIdProject(resultSet.getInt(5));
-			record.setLatitude(resultSet.getFloat(6));
-			record.setLongitude(resultSet.getFloat(7));			
+			record.setId(resultSet.getInt("id"));
+			record.setDescription(resultSet.getString("description"));
+			record.setDate(resultSet.getString("date"));
+			record.setIdUser(resultSet.getInt("id_user"));
+			record.setIdProject(resultSet.getInt("id_project"));
+			record.setLatitude(resultSet.getFloat("latitiude"));
+			record.setLongitude(resultSet.getFloat("longitude"));			
 		}
 		statement.close();
 		Database.disconnect();

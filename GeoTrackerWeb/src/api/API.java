@@ -194,13 +194,13 @@ public class API {
 		ResultSet resultSet= databaseSelection("SELECT * FROM register WHERE id = " + id);
 		Register register = new Register();
 		resultSet.next();
-		register.setId(resultSet.getInt(1));
-		register.setDescription(resultSet.getString(2));
-		register.setIdProject(resultSet.getInt(3));
-		register.setIdUser(resultSet.getInt(4));
-		register.setLatitude(resultSet.getDouble(5));
-		register.setLongitude(resultSet.getDouble(6));
-		register.setDate(resultSet.getString(7));		
+		register.setId(resultSet.getInt("id"));
+		register.setDescription(resultSet.getString("description"));
+		register.setIdProject(resultSet.getInt("id_project"));
+		register.setIdUser(resultSet.getInt("id_user"));
+		register.setLatitude(resultSet.getDouble("latitiude"));
+		register.setLongitude(resultSet.getDouble("longitude"));
+		register.setDate(resultSet.getString("date"));		
 		System.out.println(register.getId() + " " + register.getDescription() + " " +  register.getIdProject() + " " + register.getIdUser() + " " +
 				register.getLatitude() + " " + register.getLongitude() + " " + register.getDate());
 		closeConnection();
@@ -325,7 +325,7 @@ public class API {
 			if(rs.getBoolean(1)) {
 				rs.close();
 			
-				String query = "SELECT r.*, u.name, p.name FROM register r, project p, users u WHERE r.id_project = "
+				String query = "SELECT r.*, u.name username, p.name projectname FROM register r, project p, users u WHERE r.id_project = "
 						+ idProject +	" AND u.id = r.id_user AND p.id = r.id_project";
 				ArrayList<RecordResponse> records = getAllRegistersResponse(query);
 				if(records.isEmpty()) {
@@ -356,15 +356,15 @@ public class API {
 		ResultSet resultSet= databaseSelection(query);
 		while(resultSet.next()) {
 			RecordResponse record = new RecordResponse();
-			record.setId(resultSet.getInt(1));
-			record.setDescription(resultSet.getString(2));
-			record.setDate(resultSet.getString(3));		
-			record.setIdProject(resultSet.getInt(4));
-			record.setIdUser(resultSet.getInt(5));
-			record.setLatitude(resultSet.getFloat(6));
-			record.setLongitude(resultSet.getFloat(7));	
-			record.setUserName(resultSet.getString(8));
-			record.setProjectName(resultSet.getString(9));
+			record.setId(resultSet.getInt("id"));
+			record.setDescription(resultSet.getString("description"));
+			record.setDate(resultSet.getString("date"));		
+			record.setIdProject(resultSet.getInt("id_project"));
+			record.setIdUser(resultSet.getInt("id_user"));
+			record.setLatitude(resultSet.getFloat("latitiude"));
+			record.setLongitude(resultSet.getFloat("longitude"));	
+			record.setUserName(resultSet.getString("username"));
+			record.setProjectName(resultSet.getString("projectname"));
 			records.add(record);
 			System.out.println(record.getId() + " " + record.getDescription() + " " +  record.getIdProject() + " " + record.getIdUser() + " " +
 					record.getLatitude() + " " + record.getLongitude() + " " + record.getDate());
@@ -378,13 +378,13 @@ public class API {
 		ResultSet resultSet= databaseSelection(query);
 		while(resultSet.next()) {
 			Record record = new Record();
-			record.setId(resultSet.getInt(1));
-			record.setDescription(resultSet.getString(2));
-			record.setDate(resultSet.getString(3));		
-			record.setIdProject(resultSet.getInt(4));
-			record.setIdUser(resultSet.getInt(5));
-			record.setLatitude(resultSet.getFloat(6));
-			record.setLongitude(resultSet.getFloat(7));	
+			record.setId(resultSet.getInt("id"));
+			record.setDescription(resultSet.getString("description"));
+			record.setDate(resultSet.getString("date"));		
+			record.setIdProject(resultSet.getInt("id_project"));
+			record.setIdUser(resultSet.getInt("id_user"));
+			record.setLatitude(resultSet.getFloat("latitiude"));
+			record.setLongitude(resultSet.getFloat("longitude"));	
 			records.add(record);
 		}
 		closeConnection();

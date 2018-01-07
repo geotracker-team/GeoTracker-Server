@@ -63,7 +63,7 @@ public class Record {
 		this.id = id;
 		this.description = description;
 		this.date = date;
-		this.projectId = idUser;
+		this.userId = idUser;
 		this.projectId = idProject;
 		this.latitude = latitude;
 		this.longitude = longitude;
