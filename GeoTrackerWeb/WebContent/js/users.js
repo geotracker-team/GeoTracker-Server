@@ -140,8 +140,7 @@ function validateSave() {
 function validateDelete() {
 	
 	//	Pending validate there aren't records associated
-	if (confirm("Are you sure to delete the project?")) {
-		
+	if (confirm("Are you sure to delete the user?")) {
 		result = true;
 	} else {
 		result = false;

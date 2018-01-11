@@ -1,6 +1,8 @@
 package servlets;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -11,8 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.jboss.resteasy.spi.HttpRequest;
 
+import api.API;
 import api.UserAPI;
+import models.Record;
 import models.User;
 
 /**
@@ -22,7 +27,7 @@ import models.User;
 		"/UserServlet" })
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	String errorMessage;
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -106,14 +111,21 @@ public class UserServlet extends HttpServlet {
 			System.out.println("save:" + user.toString());			
 			break;
 		case "delete":
-			usersAPI.deleteUser(user);
-			System.out.println("delete: " + user.toString());
+			if (validateDelete(user.getId())) {
+				usersAPI.deleteUser(user);
+				System.out.println("delete: " + user.toString());
+			}	else {
+				strResul = "error";
+			}
 			break;
 		}
 		
 		
 		session = request.getSession(true);
 		session.setAttribute("resul", strResul);
+		if (strResul.equals("error")) {
+			session.setAttribute("error", errorMessage);
+		}
 
 		
 		//	Redirect
@@ -126,6 +138,26 @@ public class UserServlet extends HttpServlet {
 		} catch(Exception e)	{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+		}
+		
+	}
+	
+	private boolean validateDelete(int idUser) {
+		boolean validate = true;
+		API api = new API();
+		ArrayList<Record> records;
+		
+		try {
+			records = api.getAllRegistersByUser(idUser);
+			if (!records.isEmpty()) {
+				validate = false;
+				errorMessage = "User can't be deleted because it has record associated.";
+			}
+			return validate;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
 		}
 		
 	}
