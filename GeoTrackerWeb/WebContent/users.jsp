@@ -148,5 +148,16 @@
 				  </tr>
 			  </table>
 
+  <%
+  	String err = (String) session.getAttribute("error");
+  	if(err != null) {
+  %>
+  		<br/>
+  		<table  align="center" class="error">
+  			<tr><td><%=err %></td></tr>
+  		</table>
+<%		session.removeAttribute("error");
+	} %>  	
+  	
 </body>
 </html>
