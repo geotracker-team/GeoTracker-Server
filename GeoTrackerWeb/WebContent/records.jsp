@@ -11,6 +11,22 @@
 <script language="javascript" type="text/javascript" src="js/record_export.js"></script>
 <link href="css/geotracker.css" rel="stylesheet" type="text/css">
 <title>Records</title>
+
+<style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 80%;
+
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    
 </head>
 <%@ page import="java.util.ArrayList, java.util.Iterator, java.util.HashMap" %>
 <%@ page import="api.*, models.*" %>
@@ -55,6 +71,7 @@
 %>
 <body>
 
+
 		<table width="100%" border="0" cellpadding="0" cellspacing="0"
 		bgcolor="#660033">
 		<tr>
@@ -81,11 +98,17 @@
 				
 				<img src="img/blanc.gif" width="10" height="10">
 				
-				 <label for="search" id="txt">Type for search(userid or projectid)</label>  <input type="text" name="search" placeholder="search" id="search" onkeyup="Search()"><br><br><br>
+				 <label for="search" id="txt">Type for search(userid or projectid)</label>  <input type="text" name="search" placeholder="search" id="search" onkeyup="Search()">
+				 	<button id="switch">Change view</button>
+				 <br><br><br>
 				
+				
+
+<div id="table" style="display: none;">
 
 <table align='center' cellspacing=2 cellpadding=5 id="data_table" border=1 class="data_table">
 <tr>
+
 
 <th class="data_header">ID</th>	
 <th class="data_header">Description</th>
@@ -133,14 +156,59 @@
 	%>
 
 </table>
-
- <center><a href="#" id ="export" role='button'>Click On This Here Link To Export The Table Data into a CSV File
-                </a></center>
+</div>
 
 </form>
 			</td>
 		</tr>
 	</table>
+	
+<div id="map">
+    <script>
+      var map;
+      var myRecords  = [];
+      
+	  <% for (int i=0; i<records.size(); i++) { %>			
+	      myRecords[<%= i %>] = {des: "<%= records.get(i).getDescription() %>",
+			                     lat: <%= records.get(i).getLatitude() %>,
+								 lon: <%= records.get(i).getLongitude() %>}; 
+	  <% } %>
+		
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 10,
+          center: new google.maps.LatLng(myRecords[0]["lat"], myRecords[0]["lon"]),
+          mapTypeId: 'terrain'
+        });
+
+		myRecords.forEach(function(t){
+			var marker = new google.maps.Marker({
+	            position: {lat: t["lat"], lng: t["lon"]},
+	            map: map,
+	            label: t["des"],
+	            title: t["des"]
+	          });
+		});
+      }    
+    </script>
+    
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCet-bRfvcOnkotpI_COaRnRc6e2QUYQnw&callback=initMap">
+    </script>	
+</div>
+	
+	 <center><a href="#" id ="export" role='button'>Click On This Here Link To Export The Table Data into a CSV File
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+		$("#switch").click(function(e){
+			e.preventDefault();
+			$("#table").toggle();
+			$("#map").toggle();
+		});			
+    });
+</script>
 
 </body>
 </html>
