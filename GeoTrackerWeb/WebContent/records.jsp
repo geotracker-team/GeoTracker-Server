@@ -156,7 +156,7 @@ html, body {
 
 					</div>
 
-					<div id="map" style="margin-left: 15%; margin-top: 20px; width: 70%;" >
+					<div id="map" style="margin-top: 20px;" >
 						<script>
       var map;
       var myRecords  = [];
