@@ -5,10 +5,8 @@ $(document).ready(function () {
                 var $headers = $table.find('tr:has(th)')
                     ,$rows = $table.find('tr:has(td)')
 
-
                     ,tmpColDelim = String.fromCharCode(11) // vertical tab character
                     ,tmpRowDelim = String.fromCharCode(0) // null character
-
                     
                     ,colDelim = '","'
                     ,rowDelim = '"\r\n"';
@@ -47,11 +45,10 @@ $(document).ready(function () {
                 function grabRow(i,row){
                      
                     var $row = $(row);
-               
+
                     var $cols = $row.find('td'); 
                     if(!$cols.length) $cols = $row.find('th');  
-
-                    return $cols.map(grabCol)
+                    	return $cols.map(grabCol)
                                 .get().join(tmpColDelim);
                 }
                 // Grab and format a column from the table 
